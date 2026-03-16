@@ -15,19 +15,3 @@ Evaluation: RAGAS
 Backend: FastAPI
 Frontend : Streamlit
 
-## Project Structure
-autonomous-ai/
-├─ data/
-├── docs/
-├── src/
-│   ├── ingestion/
-│   ├── embeddings/
-│   ├── retrieval/
-│   ├── baseline_rag/
-│   ├── agent/
-│   └── evaluation/
-├── notebooks/
-├── app/
-├── requirements.txt
-└── .env.example
-
