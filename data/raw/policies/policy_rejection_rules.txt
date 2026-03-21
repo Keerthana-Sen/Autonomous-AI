@@ -1,0 +1,6 @@
+Rejection policy
+
+1. Requests with incomplete documentation are automatically rejected.
+2. Requests that violate budget limits are rejected without escalation.
+3. Duplicate requests within 30 days are rejected.
+4. Requests from suspended accounts are immediately rejected.

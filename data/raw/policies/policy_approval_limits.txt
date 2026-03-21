@@ -1,0 +1,7 @@
+IT Approval policy - Transaction limits
+
+1.Any request below 1000 USD can be auto-approved.
+2. Requests between 1000 USD and 5000 USD require manager approval.
+3. Requests above 5000 USD require senior manager and finance team approval.
+4. Requests above 10000 USD must be escalated to the director level.
+5. All approvals must be completed within 3 business days.
