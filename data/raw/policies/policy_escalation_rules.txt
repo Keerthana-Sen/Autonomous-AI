@@ -1,0 +1,6 @@
+Escalation policy 
+
+1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.
+2. If a request is rejected twice, it is escalated to the department head.
+3. High priority requests must be reviewed within 24 hours.
+4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.

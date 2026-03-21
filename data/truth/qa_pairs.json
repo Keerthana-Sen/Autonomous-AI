@@ -1,0 +1,34 @@
+[
+    {
+        "question":"Why was REQ001 approved?",
+        "answer":"REQ001 was approved because the amount of 500 USD is below the 1000 USD auto-approval limit defined in the approval policy."
+    },
+    {
+        "question":"Why was REQ002 escalated?",
+        "answer":"REQ002 was escalated because the approver Sarah was unavailable and the amount 7500 exceeds 5000 USD manager approval limit."
+    },
+    {
+        "question":"Why was REQ003 escalated?",
+        "answer":"REQ003 was escalated because the approver John was unavailable and the amount 10000 exceeds 5000 USD manager approval limit."
+    },
+    {
+        "question":"Why was REQ004 rejected?",
+        "answer":"REQ004 was rejected because the account is suspended."
+    },
+    {
+        "question":"Why was REQ005 rejected?",
+        "answer":"REQ005 was rejected because of incomplete documentation and a duplicate request was submitted within 30 days violating the duplicate request rejection policy."
+    },
+    {
+        "question":"Why was REQ006 rejected?",
+        "answer":"REQ006 was rejected because of incomplete documentation as per the rejection policy."
+    },
+    {
+        "question":"Why was REQ007 escalated?",
+        "answer":"REQ007 was escalated because the amount of 12000 USD exceeds the 10000 USD threshold, requiring escalation to director level."
+    },
+    {
+        "question":"Under what condition is the request escalated due to approver unavailability?",
+        "answer":"if the approver is unavailable for more than 2 business days the request is escalated according to the escalation rules."
+    }
+]

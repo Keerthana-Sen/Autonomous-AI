@@ -1,0 +1,11 @@
+﻿Request_id,requester,amount,request_type,priority,approver,approver_status,documentation_complete,duplicate,acount_status,decision,reason
+REQ001,John,500,software_license,low,Bob,available,TRUE,FALSE,active,approved,Any request below 1000 USD can be auto-approved
+REQ002,Priya,7500,hardware,medium,Sarah,unavailable,FALSE,TRUE,active,escalated,Approver unavailable and amount exceeds 5000 USD
+REQ003,Ann,10000,travel,high,John,unavailable,TRUE,TRUE,suspended,escalated,Approver unavailable and amount exceeds 5000 USD
+REQ004,Neha,3000,infrastructure,high,Bob,available,TRUE,FALSE,suspended,rejected,Account is suspended
+REQ005,David,800,training,low,Sarah,unavailable,FALSE,FALSE,active,rejected,incomplete documentation and duplicate request within 30 days
+REQ006,Ewin,5000,hardware,medium,Sarah,available,FALSE,TRUE,active,rejected,Incomplete documentation
+REQ007,Jefin,12000,software_license,low,Bob,available,FALSE,TRUE,active,escalated,Amount exceeds 10000 USD requires director approval
+REQ008,Kriss,4500,infrastructure,high,John,unavailable,TRUE,TRUE,active,escalated,Approver unavailable for more than 2 business days
+REQ009,Jannet,950,travel,medium,Bob,unavailable,TRUE,FALSE,active,approved,Any request below 1000 USD can be auto-approved
+REQ010,Emma,6000,training,low,Sarah,available,FALSE,TRUE,active,approved,Incomplete documentation and exceeds manager approval limit
