@@ -10,7 +10,7 @@ Retrieval-Augmented Generation and multi-step reasoning.
 LLM: GPT-40
 Agent framework: LangGraph
 RAG pipeline: LangChain
-Vector DB: Chroma DB
+Vector DB: ChromaDB
 Embeddings: text-embedding-ada-002
 Evaluation: RAGAS
 Backend: FastAPI
