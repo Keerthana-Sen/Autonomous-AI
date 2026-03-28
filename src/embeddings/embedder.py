@@ -4,26 +4,23 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Add project root to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 # Load .env using absolute path relative to this file
-dotenv_path = Path(__file__).resolve().parent.parent / ".env"
+dotenv_path = Path(__file__).resolve().parent.parent.parent / ".env"
 load_dotenv(dotenv_path=dotenv_path)
 
-api_key = os.getenv("OPENAI_API_KEY")
-print(f"API Key loaded: {api_key[:10] if api_key else 'NOT FOUND'}")
-
-from langchain_openai import OpenAIEmbeddings
+# HuggingFace runs locally — no API key needed
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from src.ingestion.ingest import load_documents, chunk_documents  #
+from src.ingestion.ingest import load_documents, chunk_documents
 
 CHROMA_DB = "data/chroma_db"
 
 
 def create_vector_store(chunks):
-    embedding_model = OpenAIEmbeddings(
-        model="text-embedding-ada-002",
-        openai_api_key=os.getenv("OPENAI_API_KEY")  #
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
     vector_store = Chroma.from_documents(
@@ -32,14 +29,13 @@ def create_vector_store(chunks):
         persist_directory=CHROMA_DB
     )
 
-    print(f"Stored {len(chunks)} chunks in ChromaDB at {CHROMA_DB}")  
+    print(f"Stored {len(chunks)} chunks in ChromaDB at {CHROMA_DB}")
     return vector_store
 
 
 def load_vector_store():
-    embedding_model = OpenAIEmbeddings(
-        model="text-embedding-ada-002",
-        openai_api_key=os.getenv("OPENAI_API_KEY")  #key name
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
     vector_store = Chroma(
