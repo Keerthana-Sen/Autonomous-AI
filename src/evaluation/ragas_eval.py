@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import (
@@ -6,11 +9,16 @@ from ragas.metrics import (
     context_precision,    # are retrieved chunks precise/relevant?
     context_recall        # did retrieval capture all needed info?
 )
+from langchain_groq import ChatGroq
+
+# Load .env
+dotenv_path = Path(__file__).resolve().parent.parent.parent / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
 
 def run_ragas_evaluation(results: list):
     """
-    Takes generated results and runs RAGAS evaluation.
+    Takes generated results and runs RAGAS evaluation with Groq LLM.
 
     Metrics explained:
     - faithfulness     : Does the answer stick to the context? (hallucination check)
@@ -21,18 +29,27 @@ def run_ragas_evaluation(results: list):
     Returns a dict of metric scores.
     """
 
+    # Configure RAGAS to use Groq instead of OpenAI
+    groq_api_key = os.getenv("GROQ_API_KEY")
+    llm = ChatGroq(
+        model_name="llama-3.3-70b-versatile",
+        groq_api_key=groq_api_key,
+        temperature=0.3,
+        max_tokens=512
+    )
+
     # RAGAS expects a HuggingFace Dataset with these exact column names
     ragas_data = {
         "question":     [r["question"] for r in results],
         "answer":       [r["answer"] for r in results],
-        "truth":        [r["truth"] for r in results],
+        "reference":    [r["truth"] for r in results],
         "contexts":     [r["contexts"] for r in results],
     }
 
     dataset = Dataset.from_dict(ragas_data)
-    print("\nRunning RAGAS evaluation...")
+    print("\nRunning RAGAS evaluation with Groq LLM...")
 
-    # Run all 4 metrics at once
+    # Run all 4 metrics at once with Groq LLM
     scores = evaluate(
         dataset=dataset,
         metrics=[
@@ -40,7 +57,8 @@ def run_ragas_evaluation(results: list):
             answer_relevancy,
             context_precision,
             context_recall
-        ]
+        ],
+        llm=llm
     )
 
     return scores
@@ -53,11 +71,12 @@ def print_scores(scores):
     print("RAGAS EVALUATION RESULTS — BASELINE RAG")
     print("="*50)
 
+    # RAGAS returns per-sample scores as lists, compute the mean of each metric
     metrics = {
-        "Faithfulness":      scores["faithfulness"],
-        "Answer Relevancy":  scores["answer_relevancy"],
-        "Context Precision": scores["context_precision"],
-        "Context Recall":    scores["context_recall"],
+        "Faithfulness":      sum(scores["faithfulness"]) / len(scores["faithfulness"]),
+        "Answer Relevancy":  sum(scores["answer_relevancy"]) / len(scores["answer_relevancy"]),
+        "Context Precision": sum(scores["context_precision"]) / len(scores["context_precision"]),
+        "Context Recall":    sum(scores["context_recall"]) / len(scores["context_recall"]),
     }
 
     for metric, score in metrics.items():

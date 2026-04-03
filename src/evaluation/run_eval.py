@@ -18,12 +18,12 @@ def save_results(results: list, scores: dict):
     with open("data/results/baseline_rag_answers.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    # Save scores
+    # Save scores (compute mean of each metric returned as lists)
     score_dict = {
-        "faithfulness":      scores["faithfulness"],
-        "answer_relevancy":  scores["answer_relevancy"],
-        "context_precision": scores["context_precision"],
-        "context_recall":    scores["context_recall"],
+        "faithfulness":      sum(scores["faithfulness"]) / len(scores["faithfulness"]),
+        "answer_relevancy":  sum(scores["answer_relevancy"]) / len(scores["answer_relevancy"]),
+        "context_precision": sum(scores["context_precision"]) / len(scores["context_precision"]),
+        "context_recall":    sum(scores["context_recall"]) / len(scores["context_recall"]),
     }
     with open("data/results/baseline_rag_scores.json", "w") as f:
         json.dump(score_dict, f, indent=2)
