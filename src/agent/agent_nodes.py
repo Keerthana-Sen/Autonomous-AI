@@ -1,0 +1,118 @@
+import json
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+
+from langgraph.types import Command
+from langchain_core.messages import HumanMessage, SystemMessage
+
+from src.baseline_rag.llm import get_llm
+from src.baseline_rag.llm import get_agent_llm
+from src.agent.agent_state import AgentState
+from src.agent.agent_prompts import SYSTEM_PROMPT
+from src.agent.agent_utils import extract_clean_answer
+from src.agent.tools import check_transaction, retrieve_policy_context, lookup_policy
+
+import re
+
+
+def _extract_request_id(question: str) -> str | None:
+    """Pulls REQ001-style IDs from the question string."""
+    match = re.search(r"REQ\d+", question, re.IGNORECASE)
+    return match.group(0).upper() if match else None
+
+
+def reasoning_node(state: AgentState) -> Command:
+    """
+    Structured 3-step agent — works reliably with 8b models.
+    Instead of asking the LLM to pick tools freely (which confuses small models),
+    we always run the same fixed sequence:
+      Step 1: fetch transaction details if a REQ ID is present
+      Step 2: fetch relevant policy context from ChromaDB
+      Step 3: generate final answer with all context in hand
+    This removes the tool-selection burden from the 8b model entirely.
+    """
+    llm = get_agent_llm()
+    question = state["question"]
+    iterations = state.get("iterations", 0) + 1
+
+    print(f"\n[REASONING] Iteration {iterations} — {question[:60]}...")
+
+    if iterations > 3:  # 3 steps max — no open loop needed
+        return Command(
+            goto="end_node",
+            update={
+                "final_answer": "Unable to determine answer.",
+                "iterations": iterations
+            }
+        )
+
+    # ── Step 1: Fetch transaction if REQ ID found in question ────────────────
+    transaction_context = ""
+    req_id = _extract_request_id(question)
+    if req_id:
+        print(f"  [Step 1] Fetching transaction: {req_id}")
+        tx_result = check_transaction(req_id)
+        if tx_result["status"] == "found":
+            transaction_context = f"Transaction details:\n{json.dumps(tx_result['details'], indent=2)}"
+            print(f"  ✓ Found transaction")
+        else:
+            transaction_context = f"Transaction {req_id} not found."
+            print(f"  ✗ Transaction not found")
+
+    # ── Step 2: Fetch policy context from ChromaDB ───────────────────────────
+    print(f"  [Step 2] Retrieving policy context...")
+    policy_context = retrieve_policy_context(question)
+    print(f"  ✓ Policy context retrieved ({len(policy_context)} chars)")
+
+    # ── Step 3: Build prompt and generate answer ─────────────────────────────
+    print(f"  [Step 3] Generating answer...")
+
+    # Combine all gathered context into one clean prompt
+    full_context = ""
+    if transaction_context:
+        full_context += f"{transaction_context}\n\n"
+    full_context += f"Policy context:\n{policy_context}"
+
+    messages = [
+        SystemMessage(content=SYSTEM_PROMPT),
+        HumanMessage(content=(
+            f"Context:\n{full_context}\n\n"
+            f"Question: {question}\n\n"
+            f"Based only on the context above, provide a clear 2-3 sentence explanation."
+        ))
+    ]
+
+    try:
+        response = llm.invoke(messages)  # plain invoke — no tools bound
+    except Exception as e:
+        if "rate_limit" in str(e).lower():
+            return Command(
+                goto="end_node",
+                update={"final_answer": "Rate limit reached.", "iterations": iterations}
+            )
+        raise
+
+    clean = extract_clean_answer(
+        response.content if hasattr(response, "content") else str(response)
+    )
+    print(f"  ✓ Answer ready")
+
+    return Command(
+        goto="end_node",
+        update={
+            "final_answer": clean,
+            "iterations": iterations
+        }
+    )
+
+
+def tool_execution_node(state: AgentState) -> Command:
+    """Not used in structured mode — kept for graph compatibility."""
+    return Command(goto="reasoning_node", update={})
+
+
+def end_node(state: AgentState) -> dict:
+    """Returns the final answer."""
+    return {"final_answer": state.get("final_answer", "")}

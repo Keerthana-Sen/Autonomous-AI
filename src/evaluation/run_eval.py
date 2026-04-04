@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import math
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
@@ -18,13 +19,12 @@ def save_results(results: list, scores: dict):
     with open("data/results/baseline_rag_answers.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    # Save scores (compute mean of each metric returned as lists)
-    score_dict = {
-        "faithfulness":      sum(scores["faithfulness"]) / len(scores["faithfulness"]),
-        "answer_relevancy":  sum(scores["answer_relevancy"]) / len(scores["answer_relevancy"]),
-        "context_precision": sum(scores["context_precision"]) / len(scores["context_precision"]),
-        "context_recall":    sum(scores["context_recall"]) / len(scores["context_recall"]),
-    }
+    # Save scores (compute mean of each metric returned as lists, filtering NaN values)
+    score_dict = {}
+    for key in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
+        valid_scores = [x for x in scores[key] if not math.isnan(x)]
+        score_dict[key] = sum(valid_scores) / len(valid_scores) if valid_scores else 0.0
+
     with open("data/results/baseline_rag_scores.json", "w") as f:
         json.dump(score_dict, f, indent=2)
 
