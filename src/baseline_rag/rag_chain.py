@@ -11,7 +11,8 @@ from langchain_core.output_parsers import StrOutputParser
 
 from src.baseline_rag.prompt import prompt
 from src.baseline_rag.llm import get_llm
-from src.retrieval.retriever import get_retriever
+from src.retrieval.retriever import get_smart_retriever
+from langchain_core.runnables import RunnableLambda
 
 
 def format_chunks(docs):
@@ -20,17 +21,16 @@ def format_chunks(docs):
 
 
 def build_rag_chain():
-    """
-    Assembles the full RAG pipeline:
-    query → retrieve chunks → format → fill prompt → LLM → parse output
-    """
-
-    retriever = get_retriever(k=3)
     llm = get_llm()
+
+    # Smart retriever picks correct policy file per question
+    def smart_retrieve(question: str):
+        retriever = get_smart_retriever(question, k=3)
+        return retriever.invoke(question)
 
     chain = (
         {
-            "context": retriever | format_chunks,
+            "context": RunnableLambda(smart_retrieve) | format_chunks,
             "question": RunnablePassthrough()
         }
         | prompt

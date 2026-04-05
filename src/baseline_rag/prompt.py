@@ -2,7 +2,7 @@ from langchain_core.prompts import PromptTemplate
 
 PROMPT_TEMPLATE = """
 You are an AI assistant that explains workflow automation decisions.
-Use ONLY the context below to answer. If the answer isn't in the context, say "I don't know based on the available policies."
+Use ONLY the context below. If the answer isn't in the context, say "I don't know based on the available policies."
 
 Context:
 {context}
@@ -10,15 +10,15 @@ Context:
 Question:
 {question}
 
-Think step by step:
-1. Identify the exact amount or condition mentioned in the question
-2. Find which range or rule it falls into from the context
-3. State the required approval or action clearly
+Instructions:
+- Answer in 2-3 sentences maximum
+- Be direct — start with the conclusion, then the reason
+- Reference the specific rule and amount that applies
+- Do NOT say "I would need more information" — only use what is in the context above
 
 Explanation:
 """
 
-# PromptTemplate makes this LangChain-compatible with {context} and {question} as inputs
 prompt = PromptTemplate(
     input_variables=["context", "question"],
     template=PROMPT_TEMPLATE
