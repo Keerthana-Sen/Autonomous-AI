@@ -1,0 +1,82 @@
+[
+  {
+    "question": "Why was REQ001 approved?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ001 was approved because the amount of 500 USD is below the 1000 USD auto-approval limit defined in the approval policy.",
+    "contexts": [
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+    ]
+  },
+  {
+    "question": "Why was REQ002 escalated?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ002 was escalated because the approver Sarah was unavailable and the amount 7500 exceeds 5000 USD manager approval limit.",
+    "contexts": [
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+    ]
+  },
+  {
+    "question": "Why was REQ003 escalated?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ003 was escalated because the approver John was unavailable and the amount 10000 exceeds 5000 USD manager approval limit.",
+    "contexts": [
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+    ]
+  },
+  {
+    "question": "Why was REQ004 rejected?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ004 was rejected because the account is suspended.",
+    "contexts": [
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+    ]
+  },
+  {
+    "question": "Why was REQ005 rejected?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ005 was rejected because of incomplete documentation and a duplicate request was submitted within 30 days violating the duplicate request rejection policy.",
+    "contexts": [
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+    ]
+  },
+  {
+    "question": "Why was REQ006 rejected?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ006 was rejected because of incomplete documentation as per the rejection policy.",
+    "contexts": [
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+    ]
+  },
+  {
+    "question": "Why was REQ007 escalated?",
+    "answer": "Rate limit reached.",
+    "truth": "REQ007 was escalated because the amount of 12000 USD exceeds the 10000 USD threshold, requiring escalation to director level.",
+    "contexts": [
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+    ]
+  },
+  {
+    "question": "Under what condition is the request escalated due to approver unavailability?",
+    "answer": "Rate limit reached.",
+    "truth": "if the approver is unavailable for more than 2 business days the request is escalated according to the escalation rules.",
+    "contexts": [
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
+      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+    ]
+  }
+]

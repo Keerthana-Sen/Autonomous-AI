@@ -18,11 +18,29 @@ def get_llm():
     groq_api_key = os.getenv("GROQ_API_KEY")
 
     llm = ChatGroq(
-        model_name="llama-3.3-70b-versatile",  # free, fast, generous limits
-        groq_api_key=groq_api_key,
-        temperature=0.3,        # low = more factual answers
-        max_tokens=512          # enough for policy explanations
-    )
+    model_name="llama-3.1-8b-instant",  # 500k tokens/day — won't hit limits
+    groq_api_key=groq_api_key,
+    temperature=0.0,
+    max_tokens=512
+)
 
     print("LLM loaded: llama-3.1-8b-instant via Groq")
+    return llm
+
+def get_agent_llm():
+    """
+    Separate LLM for the agent — needs reliable tool calling support.
+    llama-3.3-70b-versatile handles structured tool calls correctly.
+    llama-3.1-8b-instant does NOT — it generates malformed function syntax.
+    """
+    groq_api_key = os.getenv("GROQ_API_KEY")
+
+    llm = ChatGroq(
+        model_name="llama-3.3-70b-versatile",  # only model on Groq free tier with reliable tool use
+        groq_api_key=groq_api_key,
+        temperature=0.0,
+        max_tokens=2048
+    )
+
+    print("Agent LLM loaded: llama-3.3-70b-versatile via Groq")
     return llm

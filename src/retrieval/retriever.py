@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -18,6 +19,13 @@ from src.embeddings.embedder import load_vector_store
 
 # path what embedder.py used — same DB, same chunks
 CHROMA_DB = "data/chroma_db"
+
+
+def load_qa_pairs() -> list:
+    """Load QA pairs from the truth dataset."""
+    qa_path = Path("data/truth/qa_pairs.json")
+    with open(qa_path, "r") as f:
+        return json.load(f)
 
 
 def get_retriever(k: int = 3):
