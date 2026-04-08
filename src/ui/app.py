@@ -35,13 +35,13 @@ with tab_compare:
             col_rag, col_agent = st.columns(2)
 
             with col_rag:
-                st.markdown("###Baseline RAG")
+                st.markdown("Baseline RAG")
                 with st.spinner("Retrieving and generating..."):
                     rag_result = query_rag(question)
                 render_answer(rag_result, "rag")
 
             with col_agent:
-                st.markdown("### Autonomous Agent")
+                st.markdown("Autonomous Agent")
                 with st.spinner("Agent reasoning..."):
                     agent_result = query_agent(question)
                 render_answer(agent_result, "agent")
