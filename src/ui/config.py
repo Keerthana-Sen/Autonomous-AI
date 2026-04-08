@@ -2,7 +2,7 @@
 
 APP_NAME = "XFLOW"
 APP_SUBTITLE = "Explainable Workflow Decisions"
-APP_ICON = "⚡"
+APP_ICON = "⚙️"
 
 API_BASE = "http://localhost:8000/api"
 API_TIMEOUT = 60  # seconds
