@@ -16,7 +16,8 @@ CHROMA_DB = "data/chroma_db"
 
 def load_vector_store():
     embedding_model = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        cache_folder=os.path.expanduser("~/.cache/huggingface/hub")  # Use standard cache
     )
     vector_store = Chroma(
         persist_directory=CHROMA_DB,

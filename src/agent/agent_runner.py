@@ -74,9 +74,9 @@ def run_agent_batch(qa_pairs: list) -> list:
 
 if __name__ == "__main__":
     # Example usage
-    from src.retrieval.retriever import load_qa_pairs
+    from src.evaluation.load_dataset import load_truth
 
-    qa_pairs = load_qa_pairs()[:3]  # Test on first 3 questions
+    qa_pairs = load_truth()[:3]  # Test on first 3 questions
 
     results = run_agent_batch(qa_pairs)
 

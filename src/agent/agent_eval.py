@@ -13,7 +13,8 @@ from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from langchain_huggingface import HuggingFaceEmbeddings
 from src.agent.agent_runner import run_agent_batch
-from src.retrieval.retriever import load_qa_pairs, get_retriever
+from src.evaluation.load_dataset import load_truth
+from src.retrieval.retriever import get_retriever
 from src.evaluation.ragas_eval import run_ragas_evaluation
 
 # Load .env
@@ -193,7 +194,7 @@ def save_agent_results(agent_results: list, scores: dict, comparison: dict):
 def run_agent_eval():
     """Main entry point: generate answers, evaluate, and compare."""
     # Load QA pairs
-    qa_pairs = load_qa_pairs()
+    qa_pairs = load_truth()
 
     # Generate agent answers
     agent_results = generate_agent_answers(qa_pairs)
