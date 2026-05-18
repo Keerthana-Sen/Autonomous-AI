@@ -1,34 +1,62 @@
 [
     {
-        "question":"Why was REQ001 approved?",
-        "answer":"REQ001 was approved because the amount of 500 USD is below the 1000 USD auto-approval limit defined in the approval policy."
+        "question": "Why was REQ001 approved?",
+        "answer": "REQ001 was approved because the amount of 400 USD falls below the 1000 USD auto-approval threshold for software license requests, the documentation is complete, and the account is active."
     },
     {
-        "question":"Why was REQ002 escalated?",
-        "answer":"REQ002 was escalated because the approver Sarah was unavailable and the amount 7500 exceeds 5000 USD manager approval limit."
+        "question": "Why was REQ002 rejected instead of escalated, even though the amount of 12000 USD exceeds the director escalation threshold and the approver was unavailable?",
+        "answer": "REQ002 was rejected with a permanent flag because both the account is fully suspended and the documentation is incomplete. The rejection policy states that requests satisfying both these conditions simultaneously are permanently flagged and cannot be re-appealed. This permanent rejection takes precedence over all escalation triggers, including the 10000 USD director threshold and the unavailable approver rule."
     },
     {
-        "question":"Why was REQ003 escalated?",
-        "answer":"REQ003 was escalated because the approver John was unavailable and the amount 10000 exceeds 5000 USD manager approval limit."
+        "question": "Why was REQ003 escalated instead of rejected, given that the documentation is incomplete?",
+        "answer": "REQ003 was escalated instead of rejected because it qualifies for the critical-priority infrastructure exception in the rejection policy. This exception states that critical-priority infrastructure requests with incomplete documentation are not rejected outright; instead, they are escalated with a documentation waiver request attached, requiring complete documentation to be submitted within 48 hours."
     },
     {
-        "question":"Why was REQ004 rejected?",
-        "answer":"REQ004 was rejected because the account is suspended."
+        "question": "Why was REQ004 rejected despite being a duplicate of a request previously rejected for incomplete documentation, with the requester claiming to have corrected the issue?",
+        "answer": "REQ004 was rejected because the documentation is still incomplete in the new submission. The duplicate exception that allows reprocessing requires the new submission to actually include complete documentation. Since the documentation remains incomplete, the exception condition is not satisfied and the 30-day duplicate rejection rule applies."
     },
     {
-        "question":"Why was REQ005 rejected?",
-        "answer":"REQ005 was rejected because of incomplete documentation and a duplicate request was submitted within 30 days violating the duplicate request rejection policy."
+        "question": "Why was REQ005 approved despite being a duplicate request submitted within 30 days?",
+        "answer": "REQ005 was approved because the duplicate exception applies: the previous request was rejected for exceeding the budget limit, and the resubmission corrects that by reducing the amount to 700 USD, which is within the approved limit. The rejection policy allows reprocessing when the original rejection reason has been fully remediated and the new submission is otherwise compliant. With complete documentation and an active account, REQ005 satisfies all conditions for the exception."
     },
     {
-        "question":"Why was REQ006 rejected?",
-        "answer":"REQ006 was rejected because of incomplete documentation as per the rejection policy."
+        "question": "Why was REQ006 escalated to the director level even though the approver Sarah was available?",
+        "answer": "REQ006 was escalated to the director level because the amount of 15000 USD exceeds the 10000 USD threshold defined in both the approval and escalation policies. This threshold mandates director-level escalation regardless of whether the assigned approver is available. Approver availability is irrelevant once the amount surpasses this limit."
     },
     {
-        "question":"Why was REQ007 escalated?",
-        "answer":"REQ007 was escalated because the amount of 12000 USD exceeds the 10000 USD threshold, requiring escalation to director level."
+        "question": "What specific combination of factors caused REQ007 to receive a permanent rejection flag?",
+        "answer": "REQ007 received a permanent rejection flag because two rejection conditions are simultaneously true: the account is fully suspended and the documentation is incomplete. The rejection policy explicitly states that when both these conditions are present together, the request is permanently flagged and cannot be re-appealed or resubmitted. Neither the high priority level nor the finance sign-off requirement for infrastructure requests can override a permanent rejection flag."
     },
     {
-        "question":"Under what condition is the request escalated due to approver unavailability?",
-        "answer":"if the approver is unavailable for more than 2 business days the request is escalated according to the escalation rules."
+        "question": "Why was REQ008 escalated directly to the director level rather than following the standard escalation chain?",
+        "answer": "REQ008 was escalated directly to the director level because two escalation conditions combined: the amount of 11000 USD exceeds the 10000 USD director threshold, and the approver John is unavailable. The escalation policy states that when both conditions are present simultaneously, the request skips all intermediate approval levels and goes directly to the director."
+    },
+    {
+        "question": "Why was REQ009 rejected rather than sent for senior manager approval, despite having complete documentation and an active account?",
+        "answer": "REQ009 was rejected because the amount of 8000 USD exceeds the 5000 USD per-request budget cap for training requests defined in the approval policy. This is classified as a budget violation, which the rejection policy states must be rejected without the option of escalation. The requester must resubmit with a revised amount at or below the 5000 USD cap. High priority and complete documentation do not override a budget cap violation."
+    },
+    {
+        "question": "Why was REQ010 handled differently from a standard hardware escalation?",
+        "answer": "REQ010 was fast-tracked because Emma is a Level 5 employee. The escalation policy states that requests from employees at Level 5 or above are fast-tracked with a reduced 12-hour review window, and any escalation routes directly to the senior manager rather than following the standard chain. The approver Sarah's unavailability independently triggered escalation, which under the fast-track rule goes directly to the senior manager rather than through intermediate levels."
+    },
+    {
+        "question": "Why was REQ011 rejected even though the amount of 9000 USD would normally require senior manager and finance approval, not rejection?",
+        "answer": "REQ011 was rejected because the documentation is incomplete. The rejection policy states that incomplete documentation triggers automatic rejection. The critical-priority infrastructure exception does not apply here because the request type is software license, not infrastructure, and the priority is medium, not critical. Since rejection takes precedence over escalation and approval processes, the standard senior manager and finance approval path is bypassed."
+    },
+    {
+        "question": "Why was REQ012 escalated to two separate approval levels simultaneously rather than sequentially?",
+        "answer": "REQ012 was escalated to both the senior manager and the finance team simultaneously because it meets the compound escalation condition in the escalation policy: it is an infrastructure request exceeding 5000 USD with high priority. This specific combination triggers a dual simultaneous escalation. Additionally, as an infrastructure request above 2000 USD, finance sign-off is independently required under the approval policy."
+    },
+    {
+        "question": "Why was REQ015 rejected rather than escalated, given that the approver was unavailable?",
+        "answer": "REQ015 was rejected because the documentation is incomplete. The rejection policy states that when both rejection and escalation conditions are satisfied simultaneously, rejection takes precedence. REQ015 is a travel request, so the critical-priority infrastructure exception that would override rejection does not apply. The approver's unavailability would normally trigger escalation, but the incomplete documentation rejection overrides it per the policy precedence rule."
+    },
+    {
+        "question": "Why was REQ016 approved despite being a duplicate request submitted within 30 days?",
+        "answer": "REQ016 was approved because the duplicate exception applies: the previous request was rejected because the account was suspended, and the account is now active. The rejection policy allows reprocessing when the original rejection reason has been fully remediated and the new submission is otherwise compliant. With the account now active, complete documentation, an amount within the approval limit, and a compliant account status, all conditions for the exception are satisfied."
+    },
+    {
+        "question": "Why was REQ020 escalated with fast-track processing, and which policies contributed to this outcome?",
+        "answer": "REQ020 was escalated with fast-track processing due to three overlapping policy conditions: first, Quinn is a Level 5 employee, triggering fast-track escalation directly to the senior manager with a 12-hour review window; second, it is a critical-priority infrastructure request, qualifying for the emergency fast-track rule under the escalation policy; third, the approver John is unavailable, independently triggering escalation. Additionally, as an infrastructure request above 2000 USD, finance sign-off is required under the approval policy. The combination results in a fast-tracked, dual escalation to both the senior manager and the finance team."
     }
 ]

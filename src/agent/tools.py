@@ -4,7 +4,7 @@ import csv
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from src.retrieval.retriever import get_retriever
+from src.retrieval.retriever import retrieve_multi_policy_context
 
 # ── Load transactions ─────────────────────────────────────────────────────────
 def load_transactions():
@@ -66,20 +66,13 @@ def check_transaction(request_id: str) -> dict:
     }
 
 
-def retrieve_policy_context(query: str) -> str:
+def retrieve_policy_context(query: str, k: int = 3) -> str:
     """
-    FIX 2: RAG retriever exposed as a tool.
-    Agent now queries ChromaDB during reasoning — not just for RAGAS collection.
-    This grounds answers in actual policy documents → fixes Faithfulness + Context scores.
+    Retrieves relevant policy context across all three policy files.
+    Uses multi-policy retrieval to ensure complex multi-rule decisions
+    get context from rejection, escalation, and approval policies simultaneously.
     """
-    retriever = get_retriever(k=3)
-    docs = retriever.invoke(query)
-
-    if not docs:
-        return "No relevant policy context found."
-
-    # Join chunks into a single readable string for the LLM
-    return "\n\n".join([doc.page_content for doc in docs])
+    return retrieve_multi_policy_context(query, k_per_policy=k)
 
 
 # ── Tool registry ─────────────────────────────────────────────────────────────

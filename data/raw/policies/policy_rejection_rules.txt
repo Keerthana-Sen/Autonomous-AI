@@ -1,6 +1,18 @@
-Rejection policy
+IT Request Rejection Policy
 
-1. Requests with incomplete documentation are automatically rejected.
-2. Requests that violate budget limits are rejected without escalation.
-3. Duplicate requests within 30 days are rejected.
-4. Requests from suspended accounts are immediately rejected.
+Section 1: Standard Rejection Conditions
+1. Requests with incomplete documentation are automatically rejected unless an exception defined in Section 3 applies.
+2. Requests that exceed the approved budget caps defined in the Approval Policy (Section 3) are rejected without the option of escalation; the requester must resubmit with a revised amount.
+3. Duplicate requests submitted within 30 days are rejected unless:
+   (a) The previous request was rejected solely due to incomplete documentation, AND the new submission includes complete documentation; or
+   (b) The previous request was rejected for a reason that has since been fully remediated (e.g., account reactivated, budget revised to a compliant amount), AND the new submission is otherwise fully compliant.
+4. Requests from fully suspended accounts are immediately rejected.
+5. Requests where BOTH the account is fully suspended AND documentation is incomplete are rejected with a permanent flag. Permanently flagged requests cannot be re-appealed or resubmitted under any circumstances.
+
+Section 2: Rejection vs Escalation Precedence
+6. If a request satisfies conditions for both rejection (Sections 1 and 2) and escalation (Escalation Policy), rejection takes precedence, except as stated in Section 3 of this policy.
+7. Budget-cap violations are never converted to escalations regardless of priority, request type, or approver availability.
+
+Section 3: Exceptions That Override Standard Rejection
+8. Critical-priority infrastructure requests with incomplete documentation are not rejected outright. Instead, they are escalated with a documentation waiver request attached; the requester must provide complete documentation within 48 hours or the request will be automatically closed.
+9. Requests from accounts that are under review (not fully suspended) with amounts below 1000 USD may proceed through the standard approval process at the manager's discretion, provided all other documentation is complete.

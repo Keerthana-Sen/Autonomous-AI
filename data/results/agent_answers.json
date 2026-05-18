@@ -1,82 +1,122 @@
 [
   {
     "question": "Why was REQ001 approved?",
-    "answer": "The request REQ001 was approved because it met the criteria for auto-approval, as the amount of $500 is below the threshold of $1000. According to the policy, any request below $1000 can be auto-approved, which applies to this case. The request was properly documented and did not violate any budget limits, leading to its approval.",
-    "truth": "REQ001 was approved because the amount of 500 USD is below the 1000 USD auto-approval limit defined in the approval policy.",
+    "answer": "There is no relevant policy context found to explain the decision for REQ001. Since no policy context is available, it is not possible to cite a specific policy section and rule number for the approval decision. The transaction details show that the decision for REQ001 is \"approved\", but the reason for this decision cannot be determined from the provided context. The context does not provide any policy-related information to support the approval decision.",
+    "truth": "REQ001 was approved because the amount of 400 USD falls below the 1000 USD auto-approval threshold for software license requests, the documentation is complete, and the account is active.",
     "contexts": [
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Why was REQ002 escalated?",
-    "answer": "REQ002 was escalated because the approver, Sarah, was unavailable and the request amount of $7500 exceeds the threshold of $5000. According to the escalation policy, if an approver is unavailable, the request is escalated to the next level. The request was also likely flagged due to the high amount, which contributed to the escalation decision.",
-    "truth": "REQ002 was escalated because the approver Sarah was unavailable and the amount 7500 exceeds 5000 USD manager approval limit.",
+    "question": "Why was REQ002 rejected instead of escalated, even though the amount of 12000 USD exceeds the director escalation threshold and the approver was unavailable?",
+    "answer": "The decision for REQ002 is stated as \"rejected\" with no relevant policy context found to explain the reason. Since no policy context is available, no specific policy section and rule number can be cited. The context does mention that the approver status is \"unavailable\" and the account status is \"suspended\", but without policy context, the implications of these statuses are unclear. The request details, including the amount and priority, are provided, but their relevance to the decision cannot be determined without policy context. The decision was \"rejected\", but the exact reason cannot be determined from the given context.",
+    "truth": "REQ002 was rejected with a permanent flag because both the account is fully suspended and the documentation is incomplete. The rejection policy states that requests satisfying both these conditions simultaneously are permanently flagged and cannot be re-appealed. This permanent rejection takes precedence over all escalation triggers, including the 10000 USD director threshold and the unavailable approver rule.",
     "contexts": [
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Why was REQ003 escalated?",
-    "answer": "REQ003 was escalated because the approver, John, was unavailable and the request amount of $10,000 exceeds the threshold of $5,000. According to the escalation policy, if an approver is unavailable and the amount exceeds $5,000, the request is escalated to the next level. The request was also marked as high priority, but the primary reason for escalation was the approver's unavailability and the high amount.",
-    "truth": "REQ003 was escalated because the approver John was unavailable and the amount 10000 exceeds 5000 USD manager approval limit.",
+    "question": "Why was REQ003 escalated instead of rejected, given that the documentation is incomplete?",
+    "answer": "The decision for REQ003 is stated as \"escalated\" in the transaction details. However, there is no relevant policy context found to explain why it was escalated instead of rejected. Since no policy context is available, it is not possible to cite a specific policy section and rule number for this decision. The transaction details do show that the \"documentation_complete\" status is \"FALSE\", but without a policy context, the implications of this status are unclear. The context does not provide sufficient information to fully answer the question.",
+    "truth": "REQ003 was escalated instead of rejected because it qualifies for the critical-priority infrastructure exception in the rejection policy. This exception states that critical-priority infrastructure requests with incomplete documentation are not rejected outright; instead, they are escalated with a documentation waiver request attached, requiring complete documentation to be submitted within 48 hours.",
     "contexts": [
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Why was REQ004 rejected?",
-    "answer": "The request REQ004 was rejected because it was made from a suspended account, which is immediately rejected according to the policy. The policy rule states that requests from suspended accounts are rejected, and in this case, the account status is indeed suspended. The request amount of 3000 had no bearing on the decision, as the account status took precedence.",
-    "truth": "REQ004 was rejected because the account is suspended.",
+    "question": "Why was REQ004 rejected despite being a duplicate of a request previously rejected for incomplete documentation, with the requester claiming to have corrected the issue?",
+    "answer": "Since no relevant policy context was found, the decision cannot be directly supported by any policy section or rule. The transaction details for REQ004 show that the request was rejected, but without policy context, the exact reason for the rejection cannot be determined. The previous rejection reason for incomplete documentation is noted, but its relevance to the current decision is unclear. The request details, such as the amount of 800, request type of training, and priority of low, are available, but their impact on the decision is unknown without policy context. The decision to reject REQ004 was made, but the specific policy section and rule number supporting this decision are not available.",
+    "truth": "REQ004 was rejected because the documentation is still incomplete in the new submission. The duplicate exception that allows reprocessing requires the new submission to actually include complete documentation. Since the documentation remains incomplete, the exception condition is not satisfied and the 30-day duplicate rejection rule applies.",
     "contexts": [
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Why was REQ005 rejected?",
-    "answer": "REQ005 was rejected due to incomplete documentation and because it was a duplicate request within 30 days. According to the policy, requests with incomplete documentation are automatically rejected, and duplicate requests within this timeframe are also rejected. The request amount of $800 is not the reason for rejection, as the policy rules regarding documentation and duplicates took precedence.",
-    "truth": "REQ005 was rejected because of incomplete documentation and a duplicate request was submitted within 30 days violating the duplicate request rejection policy.",
+    "question": "Why was REQ005 approved despite being a duplicate request submitted within 30 days?",
+    "answer": "No relevant policy context was found, so there is no specific policy section or rule number to cite for the approval decision. The context only provides transaction details, which state that the request \"REQ005\" was approved, despite being a duplicate. The decision is stated as \"approved\", but the context does not provide any policy-based reasoning for this decision. The previous rejection reason was \"budget_exceeded\", but this does not explain the current approval. Since no policy context is available, the approval reason cannot be determined from the given information.",
+    "truth": "REQ005 was approved because the duplicate exception applies: the previous request was rejected for exceeding the budget limit, and the resubmission corrects that by reducing the amount to 700 USD, which is within the approved limit. The rejection policy allows reprocessing when the original rejection reason has been fully remediated and the new submission is otherwise compliant. With complete documentation and an active account, REQ005 satisfies all conditions for the exception.",
     "contexts": [
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Why was REQ006 rejected?",
-    "answer": "REQ006 was rejected because it had incomplete documentation, which is grounds for automatic rejection according to the policy. The policy states that requests with incomplete documentation are automatically rejected, and in this case, the request had incomplete documentation, leading to its rejection. The request amount of 5000 was not a factor in this decision.",
-    "truth": "REQ006 was rejected because of incomplete documentation as per the rejection policy.",
+    "question": "Why was REQ006 escalated to the director level even though the approver Sarah was available?",
+    "answer": "There is no relevant policy context found to explain why REQ006 was escalated to the director level. The transaction details show that the approver, Sarah, was available, but the decision was still escalated. Since no policy context is available, it is not possible to cite a specific policy section and rule number for this reason. The context only states that the decision was \"escalated\", but it does not provide any further information. The account status is \"active\", the employee level is \"3\", and the approver status is \"available\", but without relevant policy context, these details cannot be used to explain the escalation decision.",
+    "truth": "REQ006 was escalated to the director level because the amount of 15000 USD exceeds the 10000 USD threshold defined in both the approval and escalation policies. This threshold mandates director-level escalation regardless of whether the assigned approver is available. Approver availability is irrelevant once the amount surpasses this limit.",
     "contexts": [
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected.",
-      "Rejection policy\n\n1. Requests with incomplete documentation are automatically rejected.\n2. Requests that violate budget limits are rejected without escalation.\n3. Duplicate requests within 30 days are rejected.\n4. Requests from suspended accounts are immediately rejected."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Why was REQ007 escalated?",
-    "answer": "REQ007 was escalated because the request amount of $12,000 exceeds $10,000, which requires director approval. According to the escalation policy, requests that meet certain conditions, such as high amounts, are escalated to the next level for review. The request was escalated due to the high amount, which is a specific rule that triggers escalation to ensure proper review and approval.",
-    "truth": "REQ007 was escalated because the amount of 12000 USD exceeds the 10000 USD threshold, requiring escalation to director level.",
+    "question": "What specific combination of factors caused REQ007 to receive a permanent rejection flag?",
+    "answer": "Since no relevant policy context was found, the decision cannot be explained with specific policy sections and rule numbers. The context does state that the transaction details for REQ007 include an account status of \"suspended\" and a decision of \"rejected\", but without policy context, the exact reasons for the rejection cannot be determined. The provided context does not provide sufficient information to fully answer the question. No policy section or rule number can be cited to support the decision. The context only provides the outcome, not the underlying rules or conditions that led to it.",
+    "truth": "REQ007 received a permanent rejection flag because two rejection conditions are simultaneously true: the account is fully suspended and the documentation is incomplete. The rejection policy explicitly states that when both these conditions are present together, the request is permanently flagged and cannot be re-appealed or resubmitted. Neither the high priority level nor the finance sign-off requirement for infrastructure requests can override a permanent rejection flag.",
     "contexts": [
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+      "No relevant policy context found."
     ]
   },
   {
-    "question": "Under what condition is the request escalated due to approver unavailability?",
-    "answer": "The request is escalated to the next level if an approver is unavailable for more than 2 business days. This condition is specified in the escalation policy, which states that prolonged unavailability of an approver triggers an escalation. As a result, the request is escalated to ensure timely review and processing, in accordance with the policy rule.",
-    "truth": "if the approver is unavailable for more than 2 business days the request is escalated according to the escalation rules.",
+    "question": "Why was REQ008 escalated directly to the director level rather than following the standard escalation chain?",
+    "answer": "There is no policy context found to explain the decision for REQ008. The transaction details show that the decision was \"escalated\", but without relevant policy context, the reason for escalation directly to the director level cannot be determined. No policy section or rule number can be cited to support the decision. The context only provides the transaction details, which do not include the escalation procedure. The decision to escalate is stated, but the context does not provide further information on the escalation chain or the director level.",
+    "truth": "REQ008 was escalated directly to the director level because two escalation conditions combined: the amount of 11000 USD exceeds the 10000 USD director threshold, and the approver John is unavailable. The escalation policy states that when both conditions are present simultaneously, the request skips all intermediate approval levels and goes directly to the director.",
     "contexts": [
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.",
-      "Escalation policy \n\n1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.\n2. If a request is rejected twice, it is escalated to the department head.\n3. High priority requests must be reviewed within 24 hours.\n4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked."
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ009 rejected rather than sent for senior manager approval, despite having complete documentation and an active account?",
+    "answer": "No relevant policy context was found to explain the decision for REQ009. Since there is no policy context, no specific policy section and rule number can be cited. The transaction details show that the request has complete documentation and an active account, but the decision was still \"rejected\". The context does not provide any reason for the rejection.",
+    "truth": "REQ009 was rejected because the amount of 8000 USD exceeds the 5000 USD per-request budget cap for training requests defined in the approval policy. This is classified as a budget violation, which the rejection policy states must be rejected without the option of escalation. The requester must resubmit with a revised amount at or below the 5000 USD cap. High priority and complete documentation do not override a budget cap violation.",
+    "contexts": [
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ010 handled differently from a standard hardware escalation?",
+    "answer": "No relevant policy context was found, therefore, it is not possible to cite a specific policy section and rule number for the decision. The context only provides transaction details, but lacks policy context to support any claims. The decision for REQ010 is stated as \"escalated\", but the reason for this decision cannot be determined without relevant policy context. The provided context does not offer any explanation for why REQ010 was handled differently from a standard hardware escalation.",
+    "truth": "REQ010 was fast-tracked because Emma is a Level 5 employee. The escalation policy states that requests from employees at Level 5 or above are fast-tracked with a reduced 12-hour review window, and any escalation routes directly to the senior manager rather than following the standard chain. The approver Sarah's unavailability independently triggered escalation, which under the fast-track rule goes directly to the senior manager rather than through intermediate levels.",
+    "contexts": [
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ011 rejected even though the amount of 9000 USD would normally require senior manager and finance approval, not rejection?",
+    "answer": "The provided context does not contain any policy rules or sections that explain the rejection of REQ011. Since no relevant policy context was found, it is not possible to cite a specific policy section and rule number for the rejection reason. The transaction details show that the request was rejected, but the context does not provide any information on the criteria used for rejection. The decision states \"rejected\", but the reason is not specified in the given context. No policy section or rule number can be referenced to support the rejection decision.",
+    "truth": "REQ011 was rejected because the documentation is incomplete. The rejection policy states that incomplete documentation triggers automatic rejection. The critical-priority infrastructure exception does not apply here because the request type is software license, not infrastructure, and the priority is medium, not critical. Since rejection takes precedence over escalation and approval processes, the standard senior manager and finance approval path is bypassed.",
+    "contexts": [
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ012 escalated to two separate approval levels simultaneously rather than sequentially?",
+    "answer": "There is no relevant policy context found to explain why REQ012 was escalated to two separate approval levels simultaneously rather than sequentially. The transaction details for REQ012 show that the decision was \"escalated\", but without policy context, the reason for this escalation cannot be determined. No policy section or rule number can be cited to support any claim. The context does not provide sufficient information to fully answer the question.",
+    "truth": "REQ012 was escalated to both the senior manager and the finance team simultaneously because it meets the compound escalation condition in the escalation policy: it is an infrastructure request exceeding 5000 USD with high priority. This specific combination triggers a dual simultaneous escalation. Additionally, as an infrastructure request above 2000 USD, finance sign-off is independently required under the approval policy.",
+    "contexts": [
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ015 rejected rather than escalated, given that the approver was unavailable?",
+    "answer": "The decision for REQ015 is stated as \"rejected\" with the approver status being \"unavailable\". However, there is no relevant policy context found to explain the reason for rejection rather than escalation. Since no policy context is available, no specific policy section and rule number can be cited. The context only provides the transaction details, including the decision and approver status, but lacks the necessary policy information to support a reasoned explanation. The provided context does acknowledge the approver's unavailability and the request's rejection.",
+    "truth": "REQ015 was rejected because the documentation is incomplete. The rejection policy states that when both rejection and escalation conditions are satisfied simultaneously, rejection takes precedence. REQ015 is a travel request, so the critical-priority infrastructure exception that would override rejection does not apply. The approver's unavailability would normally trigger escalation, but the incomplete documentation rejection overrides it per the policy precedence rule.",
+    "contexts": [
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ016 approved despite being a duplicate request submitted within 30 days?",
+    "answer": "No relevant policy context was found to explain the approval decision for REQ016. The context does state that the request is a duplicate, but it does not provide any policy rules to address this condition. The decision to approve REQ016 is stated as \"approved\", but the context does not provide any underlying reasons or policy sections to support this decision. Since there is no relevant policy context, no specific policy section and rule number can be cited. The context only confirms that the request was approved, with a decision stated as \"approved\".",
+    "truth": "REQ016 was approved because the duplicate exception applies: the previous request was rejected because the account was suspended, and the account is now active. The rejection policy allows reprocessing when the original rejection reason has been fully remediated and the new submission is otherwise compliant. With the account now active, complete documentation, an amount within the approval limit, and a compliant account status, all conditions for the exception are satisfied.",
+    "contexts": [
+      "No relevant policy context found."
+    ]
+  },
+  {
+    "question": "Why was REQ020 escalated with fast-track processing, and which policies contributed to this outcome?",
+    "answer": "Since no relevant policy context was found, there are no specific policy sections or rule numbers to cite. The context does state that the decision for REQ020 was \"escalated\", but it does not provide any information on the policies that contributed to this outcome or whether fast-track processing was applied. The transaction details show that the request has a \"critical\" priority and the requester's account status is \"active\", but without relevant policy context, the reasons for the escalation cannot be determined. The context only mentions that the decision was \"escalated\", with no further explanation. No policy sections or rules can be referenced due to the lack of relevant policy context.",
+    "truth": "REQ020 was escalated with fast-track processing due to three overlapping policy conditions: first, Quinn is a Level 5 employee, triggering fast-track escalation directly to the senior manager with a 12-hour review window; second, it is a critical-priority infrastructure request, qualifying for the emergency fast-track rule under the escalation policy; third, the approver John is unavailable, independently triggering escalation. Additionally, as an infrastructure request above 2000 USD, finance sign-off is required under the approval policy. The combination results in a fast-tracked, dual escalation to both the senior manager and the finance team.",
+    "contexts": [
+      "No relevant policy context found."
     ]
   }
 ]

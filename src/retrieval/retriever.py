@@ -79,6 +79,42 @@ def retrieve_chunks(query: str, k: int = 3):
     return retriever.invoke(query)
 
 
+def retrieve_multi_policy_context(query: str, k_per_policy: int = 2) -> str:
+    """
+    Queries all three policy files separately and combines the results.
+    A single similarity search can only pull chunks from one dominant policy file,
+    missing the other policies needed for multi-rule decisions. This ensures
+    coverage across rejection, escalation, and approval rules simultaneously.
+    """
+    vector_store = load_vector_store()
+
+    policy_sources = [
+        ("policy_rejection_rules",  "Rejection Rules"),
+        ("policy_escalation_rules", "Escalation Rules"),
+        ("policy_approval_limits",  "Approval Limits"),
+    ]
+
+    sections = []
+    seen = set()
+
+    for source_filter, label in policy_sources:
+        retriever = vector_store.as_retriever(
+            search_type="similarity",
+            search_kwargs={
+                "k": k_per_policy,
+                "filter": {"source": {"$contains": source_filter}}
+            }
+        )
+        docs = retriever.invoke(query)
+        chunks = [doc.page_content for doc in docs if doc.page_content not in seen]
+        for chunk in chunks:
+            seen.add(chunk)
+        if chunks:
+            sections.append(f"[{label}]\n" + "\n\n".join(chunks))
+
+    return "\n\n---\n\n".join(sections) if sections else "No relevant policy context found."
+
+
 if __name__ == "__main__":
     test_queries = [
         "Why was REQ001 approved?",

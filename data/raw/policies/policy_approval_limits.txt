@@ -1,7 +1,20 @@
-IT Approval policy - Transaction limits
+IT Request Approval Policy — Transaction Limits
 
-1.Any request below 1000 USD can be auto-approved.
-2. Requests between 1000 USD and 5000 USD require manager approval.
-3. Requests above 5000 USD require senior manager and finance team approval.
-4. Requests above 10000 USD must be escalated to the director level.
-5. All approvals must be completed within 3 business days.
+Section 1: Standard Approval Tiers
+1. Software license and training requests under 1000 USD are auto-approved if documentation is complete and the account is active or under review.
+2. All other request types (hardware, infrastructure, travel) under 500 USD are auto-approved under the same conditions.
+3. Requests between 1000 USD and 5000 USD require manager approval.
+4. Requests between 5000 USD and 10000 USD require both senior manager and finance team approval.
+5. Requests above 10000 USD must be escalated to the director level regardless of approver availability.
+6. All approvals must be completed within 3 business days.
+
+Section 2: Request-Type Specific Overrides
+7. Infrastructure requests above 2000 USD require finance sign-off in addition to the standard approval tier, regardless of priority level.
+8. Travel requests above 3000 USD require an additional pre-approved justification document to be attached before the request can proceed to any approval stage.
+
+Section 3: Annual Budget Caps by Request Type
+9. Training requests are subject to a maximum per-request cap of 5000 USD. Requests exceeding this cap are treated as budget violations under Rejection Policy Section 1 and are immediately rejected.
+10. Travel requests are subject to a maximum per-request cap of 8000 USD. Requests exceeding this cap are treated as budget violations and are immediately rejected.
+
+Section 4: Emergency Exception
+11. Critical-priority infrastructure requests up to 5000 USD may be fast-tracked with manager approval only, bypassing the standard senior manager and finance requirement. A waiver documenting the emergency justification must be filed within 48 hours of approval.

@@ -55,7 +55,17 @@ def reasoning_node(state: AgentState) -> Command:
         print(f"  [Step 1] Fetching transaction: {req_id}")
         tx_result = check_transaction(req_id)
         if tx_result["status"] == "found":
-            transaction_context = f"Transaction details:\n{json.dumps(tx_result['details'], indent=2)}"
+            details = {k: v for k, v in tx_result["details"].items() if k.lower() != "decision"}
+            transaction_context = f"Transaction details:\n{json.dumps(details, indent=2)}"
+            actual_decision = tx_result["details"].get("decision", "").lower()
+            for keyword in ["rejected", "approved", "escalated"]:
+                if keyword in question.lower() and actual_decision and keyword not in actual_decision:
+                    transaction_context += (
+                        f"\n\nNOTE: The question assumes this request was {keyword}, "
+                        f"but the transaction record shows the actual decision was '{actual_decision}'. "
+                        f"Correct the user's assumption in your answer."
+                    )
+                    break
             print(f"  ✓ Found transaction")
         else:
             transaction_context = f"Transaction {req_id} not found."
@@ -80,7 +90,9 @@ def reasoning_node(state: AgentState) -> Command:
         HumanMessage(content=(
             f"Context:\n{full_context}\n\n"
             f"Question: {question}\n\n"
-            f"Based only on the context above, provide a clear 2-3 sentence explanation."
+            f"Using ONLY the information explicitly stated in the context above, explain the decision. "
+            f"Cite the specific policy section and rule number for each reason. "
+            f"Do not introduce any amounts, conditions, or rules that do not appear verbatim in the context."
         ))
     ]
 

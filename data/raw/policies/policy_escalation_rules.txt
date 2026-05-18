@@ -1,6 +1,18 @@
-Escalation policy 
+IT Request Escalation Policy
 
-1. If an approver is unavailable for more than 2 business days, the request is escalated to the next level.
-2. If a request is rejected twice, it is escalated to the department head.
-3. High priority requests must be reviewed within 24 hours.
-4. If the requester is a senior employee (Level 5 and above), requests are fast-tracked.
+Section 1: Standard Escalation Triggers
+1. If an approver is unavailable for more than 2 business days, the request is escalated to the next approval level.
+2. If a request has been formally rejected twice, it is escalated to the department head for a final decision.
+3. High-priority requests must be reviewed within 24 hours; if not actioned within 24 hours, they are automatically escalated regardless of approver availability.
+4. Requests above 10000 USD are escalated to the director level even if the assigned approver is available.
+
+Section 2: Multi-Level and Compound Escalation
+5. Infrastructure requests above 5000 USD with high or critical priority are escalated to both the senior manager and the finance team simultaneously, not sequentially.
+6. If an approver is unavailable AND the request amount exceeds 10000 USD, the request is escalated directly to the director, skipping all intermediate approval levels.
+
+Section 3: Fast-Track Escalation
+7. Requests submitted by employees at Level 5 or above are fast-tracked: the review window is reduced to 12 hours, and the first escalation goes directly to the senior manager rather than the standard next level.
+8. Critical-priority requests that qualify for the infrastructure emergency exception (Rejection Policy Section 3) are processed on a fast-track basis even while documentation is pending.
+
+Section 4: Escalation vs Rejection Precedence
+9. Rejection conditions defined in the Rejection Policy take precedence over escalation triggers. The sole exception is critical-priority infrastructure requests as defined in Rejection Policy Section 3, which are escalated rather than rejected.

@@ -1,11 +1,21 @@
-﻿Request_id,requester,amount,request_type,priority,approver,approver_status,documentation_complete,duplicate,acount_status,decision,reason
-REQ001,John,500,software_license,low,Bob,available,TRUE,FALSE,active,approved,Any request below 1000 USD can be auto-approved
-REQ002,Priya,7500,hardware,medium,Sarah,unavailable,FALSE,TRUE,active,escalated,Approver unavailable and amount exceeds 5000 USD
-REQ003,Ann,10000,travel,high,John,unavailable,TRUE,TRUE,suspended,escalated,Approver unavailable and amount exceeds 5000 USD
-REQ004,Neha,3000,infrastructure,high,Bob,available,TRUE,FALSE,suspended,rejected,Account is suspended
-REQ005,David,800,training,low,Sarah,unavailable,FALSE,FALSE,active,rejected,incomplete documentation and duplicate request within 30 days
-REQ006,Ewin,5000,hardware,medium,Sarah,available,FALSE,TRUE,active,rejected,Incomplete documentation
-REQ007,Jefin,12000,software_license,low,Bob,available,FALSE,TRUE,active,escalated,Amount exceeds 10000 USD requires director approval
-REQ008,Kriss,4500,infrastructure,high,John,unavailable,TRUE,TRUE,active,escalated,Approver unavailable for more than 2 business days
-REQ009,Jannet,950,travel,medium,Bob,unavailable,TRUE,FALSE,active,approved,Any request below 1000 USD can be auto-approved
-REQ010,Emma,6000,training,low,Sarah,available,FALSE,TRUE,active,approved,Incomplete documentation and exceeds manager approval limit
+Request_id,requester,amount,request_type,priority,approver,approver_status,documentation_complete,duplicate,account_status,employee_level,previous_rejection_reason,decision
+REQ001,John,400,software_license,low,Bob,available,TRUE,FALSE,active,3,none,approved
+REQ002,Priya,12000,hardware,medium,Sarah,unavailable,FALSE,FALSE,suspended,3,none,rejected
+REQ003,Ann,3500,infrastructure,critical,John,unavailable,FALSE,FALSE,active,3,none,escalated
+REQ004,Neha,800,training,low,Bob,available,FALSE,TRUE,active,3,incomplete_documentation,rejected
+REQ005,David,700,training,medium,Sarah,available,TRUE,TRUE,active,3,budget_exceeded,approved
+REQ006,Ewin,15000,hardware,medium,Sarah,available,TRUE,FALSE,active,3,none,escalated
+REQ007,Jefin,2000,infrastructure,high,Bob,available,FALSE,FALSE,suspended,3,none,rejected
+REQ008,Kriss,11000,travel,high,John,unavailable,TRUE,FALSE,active,3,none,escalated
+REQ009,Janet,8000,training,high,Bob,available,TRUE,FALSE,active,3,none,rejected
+REQ010,Emma,4000,hardware,medium,Sarah,unavailable,TRUE,FALSE,active,5,none,escalated
+REQ011,Anna,9000,software_license,medium,John,available,FALSE,FALSE,active,3,none,rejected
+REQ012,Marcus,7000,infrastructure,high,Bob,available,TRUE,FALSE,active,3,none,escalated
+REQ013,Lily,750,training,low,Sarah,available,TRUE,FALSE,under_review,3,none,approved
+REQ014,Tom,4500,infrastructure,critical,John,available,FALSE,FALSE,active,3,none,escalated
+REQ015,Zara,3500,travel,high,Bob,unavailable,FALSE,FALSE,active,3,none,rejected
+REQ016,Felix,2500,hardware,high,Sarah,available,TRUE,TRUE,active,3,suspended_account,approved
+REQ017,Nina,6500,infrastructure,medium,John,unavailable,TRUE,FALSE,active,3,none,escalated
+REQ018,Oscar,450,software_license,low,Bob,available,TRUE,FALSE,under_review,3,none,approved
+REQ019,Paula,2000,travel,high,Sarah,available,TRUE,FALSE,active,3,none,approved
+REQ020,Quinn,4800,infrastructure,critical,John,unavailable,TRUE,FALSE,active,5,none,escalated

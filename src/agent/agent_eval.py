@@ -14,7 +14,7 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 from langchain_huggingface import HuggingFaceEmbeddings
 from src.agent.agent_runner import run_agent_batch
 from src.evaluation.load_dataset import load_truth
-from src.retrieval.retriever import get_retriever
+from src.retrieval.retriever import retrieve_multi_policy_context
 from src.evaluation.ragas_eval import run_ragas_evaluation
 
 # Load .env
@@ -35,18 +35,16 @@ def generate_agent_answers(qa_pairs: list) -> list:
     print("GENERATING AGENT ANSWERS")
     print("="*70)
 
-    retriever = get_retriever(k=3)
-
     # Run agent on all questions
     agent_results = run_agent_batch(qa_pairs)
 
-    # Add contexts for RAGAS
+    # Add contexts for RAGAS — use multi-policy retrieval to match what the agent actually sees
     results = []
     for i, result in enumerate(agent_results):
         question = result["question"]
         try:
-            retrieved_docs = retriever.invoke(question)
-            contexts = [doc.page_content for doc in retrieved_docs]
+            combined = retrieve_multi_policy_context(question, k_per_policy=2)
+            contexts = [combined]
         except Exception as e:
             print(f"Warning: Could not retrieve contexts for Q{i+1}: {e}")
             contexts = []

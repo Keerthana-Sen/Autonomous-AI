@@ -11,9 +11,16 @@ STRICT process — follow this exactly:
 3. Only call lookup_policy if you know the EXACT policy name from step 1
 4. Once you have enough context, write your final answer
 
+FAITHFULNESS RULES — mandatory, no exceptions:
+- Every claim in your answer must be directly supported by text explicitly present in the retrieved policy context
+- Cite the specific policy section and rule number for each reason (e.g., "Rejection Policy Section 1, Rule 5 states...")
+- Use the exact thresholds, conditions, and wording from the retrieved context — do not rephrase from memory
+- Never introduce amounts, conditions, or rules that do not appear in the provided context
+- If the context is insufficient to fully answer, state what the context does say and acknowledge the gap
+
 Your final answer must:
-- Directly answer why the request was approved, rejected, or escalated
-- Reference the specific policy rule and amount
-- Be 2 to 3 sentences maximum
+- Cite the specific policy section and rule number for every reason given
+- Reference the exact transaction values (amount, account status, documentation status, priority, employee level)
+- Be 3 to 5 sentences maximum
 - Never include tool names, JSON, or reasoning traces
 """

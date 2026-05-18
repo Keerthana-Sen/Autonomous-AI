@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from datasets import Dataset
 from ragas import evaluate
+from ragas import RunConfig
 from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
@@ -15,21 +16,20 @@ load_dotenv(dotenv_path=dotenv_path)
 
 def get_ragas_config():
     """
-    RAGAS needs its own LLM + embeddings to score answers.
-    We wrap LangChain's ChatGroq in LangchainLLMWrapper so RAGAS can use it.
-    HuggingFace embeddings are used for answer_relevancy scoring — free, no API needed.
+    RAGAS LLM + embeddings config using Groq and HuggingFace.
+    No OpenAI needed — fully free.
     """
 
-    # Wrap Groq LLM for RAGAS — LangchainLLMWrapper is the correct interface
+    # Groq LLM wrapped for RAGAS
     llm = ChatGroq(
         model_name="llama-3.1-8b-instant",
         groq_api_key=os.getenv("GROQ_API_KEY"),
         temperature=0.0,
         max_tokens=2048
     )
-    ragas_llm = LangchainLLMWrapper(llm)          # ✅ fixed: llm not groq_llm
+    ragas_llm = LangchainLLMWrapper(llm)  # wrap for RAGAS compatibility
 
-    # ✅ Keep only this embeddings block — delete the duplicate below it
+    # HuggingFace embeddings — free, local, no API needed
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
@@ -48,10 +48,10 @@ def run_ragas_evaluation(results: list) -> dict:
 
     # RAGAS expects these exact column names
     dataset = Dataset.from_dict({
-        "question":     [r["question"] for r in results],
-        "answer":       [r["answer"] for r in results],
-        "reference":    [r["truth"] for r in results],
-        "contexts":     [r["contexts"] for r in results],
+        "question":  [r["question"] for r in results],
+        "answer":    [r["answer"] for r in results],
+        "reference": [r.get("truth", r.get("ground_truth", "")) for r in results],
+        "contexts":  [r["contexts"] for r in results],
     })
 
     print("\nRunning RAGAS evaluation...")
@@ -60,29 +60,30 @@ def run_ragas_evaluation(results: list) -> dict:
         dataset=dataset,
         metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
         llm=ragas_llm,
-        embeddings=ragas_embeddings   # needed for answer_relevancy
+        embeddings=ragas_embeddings,
+        run_config=RunConfig(max_workers=2, timeout=120)
     )
 
     return scores
 
 
-def print_scores(scores):
+def print_scores(scores, title="RAGAS EVALUATION RESULTS"):
     """Prints RAGAS scores in a readable format."""
 
     print("\n" + "="*50)
-    print("RAGAS EVALUATION RESULTS — BASELINE RAG")
+    print(title)
     print("="*50)
 
     metrics = {}
     for key in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
         raw = scores[key]
 
-        # RAGAS sometimes returns a list of per-sample scores — average them
+        # Handle list of per-sample scores — average them, skip NaN
         if isinstance(raw, list):
-            valid = [x for x in raw if x is not None and not (isinstance(x, float) and x != x)]  # filter NaN
+            valid = [x for x in raw if x is not None and x == x]
             avg = sum(valid) / len(valid) if valid else 0.0
         else:
-            avg = raw if raw is not None else 0.0
+            avg = raw if (raw is not None and raw == raw) else 0.0
 
         metrics[key.replace("_", " ").title()] = avg
 

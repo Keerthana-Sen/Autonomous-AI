@@ -12,7 +12,7 @@ def load_documents(policy_dir: str):
     return documents
 
 def chunk_documents(documents):
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)  #Split documents into smaller chunks.
+    splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=150)  #Split documents into smaller chunks.
     chunks = splitter.split_documents(documents)
     print(f"Created {len(chunks)} chunks")
     return chunks
