@@ -1,9 +1,9 @@
 {
   "faithfulness": {
-    "agent": 0.4007197167911453,
-    "baseline": 0.21904761904761905,
-    "difference": 0.18167209774352627,
-    "improvement_percent": 82.93726201334896
+    "agent": 0.4902116402116402,
+    "baseline": 0.20904761904761904,
+    "difference": 0.28116402116402117,
+    "improvement_percent": 134.49759554543155
   },
   "answer_relevancy": {
     "agent": 0.0,
@@ -13,14 +13,14 @@
   },
   "context_precision": {
     "agent": 0.0,
-    "baseline": 0.7611111110747222,
-    "difference": -0.7611111110747222,
+    "baseline": 0.8666666666188888,
+    "difference": -0.8666666666188888,
     "improvement_percent": -100.0
   },
   "context_recall": {
-    "agent": 0.05128205128205128,
-    "baseline": 0.5326984126984127,
-    "difference": -0.4814163614163614,
-    "improvement_percent": -90.37315485468048
+    "agent": 0.04444444444444444,
+    "baseline": 0.6566666666666666,
+    "difference": -0.6122222222222222,
+    "improvement_percent": -93.23181049069375
   }
 }

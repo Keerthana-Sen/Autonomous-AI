@@ -44,7 +44,7 @@ def generate_agent_answers(qa_pairs: list) -> list:
         question = result["question"]
         try:
             combined = retrieve_multi_policy_context(question, k_per_policy=2)
-            contexts = [combined]
+            contexts = [s.strip() for s in combined.split("---") if s.strip()]
         except Exception as e:
             print(f"Warning: Could not retrieve contexts for Q{i+1}: {e}")
             contexts = []

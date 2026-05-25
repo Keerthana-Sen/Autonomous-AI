@@ -58,22 +58,42 @@ def reasoning_node(state: AgentState) -> Command:
             details = {k: v for k, v in tx_result["details"].items() if k.lower() != "decision"}
             transaction_context = f"Transaction details:\n{json.dumps(details, indent=2)}"
             actual_decision = tx_result["details"].get("decision", "").lower()
-            for keyword in ["rejected", "approved", "escalated"]:
-                if keyword in question.lower() and actual_decision and keyword not in actual_decision:
+            # Only fire mismatch if exactly one decision keyword appears in the
+            # question — multiple keywords means a comparison/reasoning question
+            # (e.g. "escalated instead of rejected"), not a false assumption.
+            keywords_in_q = [k for k in ["rejected", "approved", "escalated"] if k in question.lower()]
+            if len(keywords_in_q) == 1:
+                keyword = keywords_in_q[0]
+                if actual_decision and keyword not in actual_decision:
                     transaction_context += (
                         f"\n\nNOTE: The question assumes this request was {keyword}, "
                         f"but the transaction record shows the actual decision was '{actual_decision}'. "
                         f"Correct the user's assumption in your answer."
                     )
-                    break
             print(f"  ✓ Found transaction")
         else:
             transaction_context = f"Transaction {req_id} not found."
             print(f"  ✗ Transaction not found")
 
     # ── Step 2: Fetch policy context from ChromaDB ───────────────────────────
+    # Enrich the retrieval query with transaction attributes so type-specific
+    # budget caps and rules (e.g. training cap, infrastructure rules) are found.
     print(f"  [Step 2] Retrieving policy context...")
-    policy_context = retrieve_policy_context(question)
+    retrieval_query = question
+    if req_id and tx_result.get("status") == "found":
+        d = tx_result["details"]
+        extras = []
+        if d.get("request_type"):
+            extras.append(f"request type: {d['request_type']}")
+        if d.get("amount"):
+            extras.append(f"amount: {d['amount']} USD")
+        if d.get("priority"):
+            extras.append(f"priority: {d['priority']}")
+        if d.get("account_status"):
+            extras.append(f"account status: {d['account_status']}")
+        if extras:
+            retrieval_query = f"{question}\nTransaction attributes: {', '.join(extras)}"
+    policy_context = retrieve_policy_context(retrieval_query)
     print(f"  ✓ Policy context retrieved ({len(policy_context)} chars)")
 
     # ── Step 3: Build prompt and generate answer ─────────────────────────────
