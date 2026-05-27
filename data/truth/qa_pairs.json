@@ -28,8 +28,8 @@
         "answer": "REQ007 received a permanent rejection flag because two rejection conditions are simultaneously true: the account is fully suspended and the documentation is incomplete. The rejection policy explicitly states that when both these conditions are present together, the request is permanently flagged and cannot be re-appealed or resubmitted. Neither the high priority level nor the finance sign-off requirement for infrastructure requests can override a permanent rejection flag."
     },
     {
-        "question": "Why was REQ008 escalated directly to the director level rather than following the standard escalation chain?",
-        "answer": "REQ008 was escalated directly to the director level because two escalation conditions combined: the amount of 11000 USD exceeds the 10000 USD director threshold, and the approver John is unavailable. The escalation policy states that when both conditions are present simultaneously, the request skips all intermediate approval levels and goes directly to the director."
+        "question": "Why was REQ008 rejected despite the amount of 11000 USD exceeding the 10000 USD director escalation threshold and the approver being unavailable?",
+        "answer": "REQ008 was rejected because the amount of 11000 USD exceeds the 8000 USD per-request budget cap for travel requests defined in the Approval Policy (Section 3, Rule 10). The Rejection Policy (Section 2, Rule 7) states that budget-cap violations are never converted to escalations regardless of priority, request type, or approver availability. Although the amount would normally trigger director-level escalation and the approver's unavailability would independently trigger escalation, both are overridden by the travel budget cap violation."
     },
     {
         "question": "Why was REQ009 rejected rather than sent for senior manager approval, despite having complete documentation and an active account?",

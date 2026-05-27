@@ -3,8 +3,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 import streamlit as st
-from src.ui.components import render_header, render_sidebar, render_question_input, render_answer
-from src.ui.api_client import query_rag, query_agent
+from src.ui.components import (
+    render_header, render_sidebar, render_question_input,
+    render_answer_card, render_transaction_card, render_comparison,
+    render_agent_with_steps
+)
+from src.ui.api_client import query_rag, inject_transaction
+from src.ui.config import TRANSACTIONS_DATA, REQ_IDS
 
 # ── Page setup ────────────────────────────────────────────────────────────────
 render_header()
@@ -71,47 +76,191 @@ st.markdown("""
         background-color: #4f8ef7 !important;
         border: none;
     }
+
+    /* ── Decision badges ───────────────────────────────────────────────── */
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+    .badge-approved  { background: #1b5e20; color: #a5d6a7; }
+    .badge-rejected  { background: #b71c1c; color: #ffcdd2; }
+    .badge-escalated { background: #0d47a1; color: #bbdefb; }
+    .badge-unknown   { background: #37474f; color: #cfd8dc; }
+
+    /* ── Transaction detail card ───────────────────────────────────────── */
+    .tx-card {
+        background: linear-gradient(135deg, #0d1b2a 0%, #1a2560 100%);
+        border: 1px solid #3949ab;
+        border-radius: 12px;
+        padding: 1.2rem 1.4rem;
+        margin-bottom: 1.2rem;
+    }
+    .tx-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    .tx-id {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #e8eaf6;
+    }
+    .tx-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.6rem 1.2rem;
+    }
+    .tx-field {
+        display: flex;
+        flex-direction: column;
+    }
+    .tx-label {
+        font-size: 0.72rem;
+        color: #7986cb;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 2px;
+    }
+    .tx-value {
+        font-size: 0.88rem;
+        color: #c5cae9;
+        font-weight: 500;
+    }
+
+    /* ── Comparison column headers ─────────────────────────────────────── */
+    .system-header-rag {
+        background: linear-gradient(90deg, #1a237e, #283593);
+        color: #c5cae9;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+        border-left: 4px solid #5c6bc0;
+    }
+    .system-header-agent {
+        background: linear-gradient(90deg, #0d47a1, #1565c0);
+        color: #bbdefb;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+        border-left: 4px solid #42a5f5;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar + question input ──────────────────────────────────────────────────
+# ── Sidebar (sample questions for RAG / Agent tabs) ──────────────────────────
 selected = render_sidebar()
-question = render_question_input(selected)
-
-st.markdown("---")
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab_compare, tab_rag, tab_agent = st.tabs([
-    "Compare RAG vs Agent",
+tab_submit, tab_rag, tab_agent = st.tabs([
+    "Submit Request",
     "Baseline RAG",
-    "Autonomous Agent"
+    "Autonomous Agent",
 ])
 
 
-# ── Tab 1: Side by side comparison ───────────────────────────────────────────
-with tab_compare:
-    st.subheader("Compare RAG vs Agent — Side by Side")
-    st.caption("Run the same question through both systems and compare how each derives its explanation.")
+# ── Tab 1: Submit Request demo ────────────────────────────────────────────────
+with tab_submit:
+    st.subheader("Submit a Request")
+    st.caption(
+        "Pick an existing transaction or build a custom one — "
+        "then see how Baseline RAG and the Autonomous Agent explain the decision side by side."
+    )
 
-    if st.button("Run Both", disabled=not question, type="primary"):
-        if not question.strip():
-            st.warning("Please enter a question first.")
-        else:
-            col_rag, col_agent = st.columns(2)
+    mode = st.radio(
+        "Mode",
+        ["Pick an existing transaction", "Build a custom request"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
-            with col_rag:
-                st.markdown("### Baseline RAG")
-                with st.spinner("Retrieving and generating..."):
-                    rag_result = query_rag(question)
-                render_answer(rag_result, "rag")
+    # ── Mode A: Pick existing ─────────────────────────────────────────────
+    if mode == "Pick an existing transaction":
+        req_id = st.selectbox("Select a transaction", REQ_IDS)
+        tx = TRANSACTIONS_DATA[req_id]
+        render_transaction_card(req_id, tx)
 
-            with col_agent:
-                st.markdown("### Autonomous Agent")
-                with st.spinner("Agent reasoning..."):
-                    agent_result = query_agent(question)
-                render_answer(agent_result, "agent")
+        if st.button("Analyze Decision", type="primary"):
+            q = f"Why was {req_id} {tx['decision']}?"
+            st.markdown("---")
+            render_comparison(q)
+
+    # ── Mode B: Custom request ────────────────────────────────────────────
     else:
-        st.info("Select a sample question from the sidebar or type your own, then click **Run Both** to compare explanations.")
+        if "custom_req_counter" not in st.session_state:
+            st.session_state.custom_req_counter = 0
+
+        with st.form("custom_request_form"):
+            st.markdown("**Request Details**")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                requester = st.text_input("Requester Name", value="Alex")
+                amount = st.number_input("Amount (USD)", min_value=1, max_value=100000, value=5000, step=100)
+                request_type = st.selectbox("Request Type", [
+                    "software_license", "hardware", "infrastructure", "training", "travel"
+                ])
+            with col2:
+                priority = st.selectbox("Priority", ["low", "medium", "high", "critical"])
+                approver = st.selectbox("Approver", ["Bob", "Sarah", "John"])
+                approver_status = st.radio("Approver Status", ["available", "unavailable"], horizontal=True)
+            with col3:
+                account_status = st.selectbox("Account Status", ["active", "suspended", "under_review"])
+                employee_level = st.selectbox("Employee Level", ["3", "4", "5", "6"])
+                docs_complete = st.radio("Documentation Complete", ["TRUE", "FALSE"], horizontal=True)
+                duplicate = st.radio("Duplicate Request", ["FALSE", "TRUE"], horizontal=True)
+
+            prev_reason = st.selectbox(
+                "Previous Rejection Reason",
+                ["none", "incomplete_documentation", "budget_exceeded", "suspended_account", "other"]
+            )
+
+            submitted = st.form_submit_button("Submit Request", type="primary")
+
+        if submitted:
+            st.session_state.custom_req_counter += 1
+            custom_id = f"REQCUSTOM{st.session_state.custom_req_counter:03d}"
+
+            tx_payload = {
+                "request_id": custom_id,
+                "requester": requester,
+                "amount": str(amount),
+                "request_type": request_type,
+                "priority": priority,
+                "approver": approver,
+                "approver_status": approver_status,
+                "documentation_complete": docs_complete,
+                "duplicate": duplicate,
+                "account_status": account_status,
+                "employee_level": employee_level,
+                "previous_rejection_reason": prev_reason,
+                "decision": "pending",
+            }
+
+            inject_result = inject_transaction(tx_payload)
+            if "error" in inject_result:
+                st.error(f"Failed to inject transaction: {inject_result['error']}")
+            else:
+                tx_display = {k: v for k, v in tx_payload.items() if k != "request_id"}
+                render_transaction_card(custom_id, tx_display)
+                st.markdown("---")
+                q = (
+                    f"A new {priority}-priority {request_type.replace('_', ' ')} request "
+                    f"({custom_id}) for ${amount} was submitted by {requester}. "
+                    f"Documentation complete: {docs_complete}. "
+                    f"Account status: {account_status}. "
+                    f"Approver {approver} is {approver_status}. "
+                    f"What decision should be made and why?"
+                )
+                render_comparison(q)
 
 
 # ── Tab 2: Baseline RAG ───────────────────────────────────────────────────────
@@ -119,13 +268,16 @@ with tab_rag:
     st.subheader("Baseline RAG")
     st.caption("Retrieves relevant policy chunks from ChromaDB, then generates an answer with Groq LLM.")
 
+    question = render_question_input(selected, key="rag_question")
     if st.button("Ask RAG", disabled=not question):
         if not question.strip():
             st.warning("Please enter a question first.")
         else:
             with st.spinner("Retrieving policy chunks and generating answer..."):
-                result = query_rag(question)
-            render_answer(result, "rag")
+                st.session_state.rag_result = query_rag(question)
+
+    if st.session_state.get("rag_result"):
+        render_answer_card(st.session_state.rag_result, "rag")
 
 
 # ── Tab 3: Autonomous Agent ───────────────────────────────────────────────────
@@ -133,10 +285,12 @@ with tab_agent:
     st.subheader("Autonomous Agent")
     st.caption("LangGraph agent reasons step-by-step: fetches transaction details, retrieves policy context, then derives the decision.")
 
+    question = render_question_input(selected, key="agent_question")
     if st.button("Ask Agent", disabled=not question):
         if not question.strip():
             st.warning("Please enter a question first.")
         else:
-            with st.spinner("Agent reasoning... (may take a few seconds)"):
-                result = query_agent(question)
-            render_answer(result, "agent")
+            st.session_state.agent_result = render_agent_with_steps(question)
+
+    if st.session_state.get("agent_result"):
+        render_answer_card(st.session_state.agent_result, "agent")

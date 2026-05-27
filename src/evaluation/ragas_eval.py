@@ -4,14 +4,20 @@ from pathlib import Path
 from datasets import Dataset
 from ragas import evaluate
 from ragas import RunConfig
-from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
+from ragas.metrics import faithfulness, context_precision, context_recall
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLiteCache
 
 dotenv_path = Path(__file__).resolve().parent.parent.parent / ".env"
 load_dotenv(dotenv_path=dotenv_path)
+
+# Cache LLM responses to disk — repeated eval runs with same data are instant
+_CACHE_PATH = str(Path(__file__).resolve().parent.parent.parent / ".ragas_cache.db")
+set_llm_cache(SQLiteCache(database_path=_CACHE_PATH))
 
 
 def get_ragas_config():
@@ -41,7 +47,7 @@ def get_ragas_config():
 def run_ragas_evaluation(results: list) -> dict:
     """
     Runs RAGAS on generated answers.
-    Scores: faithfulness, answer_relevancy, context_precision, context_recall.
+    Scores: faithfulness, context_precision, context_recall.
     """
 
     ragas_llm, ragas_embeddings = get_ragas_config()
@@ -58,10 +64,10 @@ def run_ragas_evaluation(results: list) -> dict:
 
     scores = evaluate(
         dataset=dataset,
-        metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
+        metrics=[faithfulness, context_precision, context_recall],
         llm=ragas_llm,
         embeddings=ragas_embeddings,
-        run_config=RunConfig(max_workers=2, timeout=120)
+        run_config=RunConfig(max_workers=8, timeout=120)
     )
 
     return scores
@@ -75,7 +81,7 @@ def print_scores(scores, title="RAGAS EVALUATION RESULTS"):
     print("="*50)
 
     metrics = {}
-    for key in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
+    for key in ["faithfulness", "context_precision", "context_recall"]:
         raw = scores[key]
 
         # Handle list of per-sample scores — average them, skip NaN

@@ -3,7 +3,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from fastapi import APIRouter, HTTPException
-from src.api.models import QuestionRequest, AnswerResponse
+from src.api.models import QuestionRequest, AnswerResponse, InjectTransactionRequest
+import src.agent.tools as _tools_module
 from src.baseline_rag.rag_chain import build_rag_chain
 from src.retrieval.retriever import get_retriever
 from src.agent.agent_runner import run_agent
@@ -58,4 +59,12 @@ def agent_endpoint(request: QuestionRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+
+@router.post("/inject_transaction")
+def inject_transaction(request: InjectTransactionRequest):
+    """Injects a transaction into the live in-memory TRANSACTIONS dict."""
+    row = request.model_dump()
+    req_id = row.pop("request_id")
+    _tools_module.TRANSACTIONS[req_id] = {"Request_id": req_id, **row}
+    return {"status": "injected", "request_id": req_id}

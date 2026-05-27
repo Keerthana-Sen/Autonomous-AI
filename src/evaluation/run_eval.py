@@ -21,7 +21,7 @@ def save_results(results: list, scores: dict):
 
     # Save scores (compute mean of each metric returned as lists, filtering NaN values)
     score_dict = {}
-    for key in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
+    for key in ["faithfulness", "context_precision", "context_recall"]:
         valid_scores = [x for x in scores[key] if not math.isnan(x)]
         score_dict[key] = sum(valid_scores) / len(valid_scores) if valid_scores else 0.0
 

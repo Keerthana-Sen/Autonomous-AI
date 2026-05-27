@@ -7,11 +7,9 @@ from pathlib import Path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLiteCache
 
-from ragas.llms import LangchainLLMWrapper
-from ragas.embeddings import LangchainEmbeddingsWrapper
-from langchain_huggingface import HuggingFaceEmbeddings
 from src.agent.agent_runner import run_agent_batch
 from src.evaluation.load_dataset import load_truth
 from src.retrieval.retriever import retrieve_multi_policy_context
@@ -19,6 +17,9 @@ from src.evaluation.ragas_eval import run_ragas_evaluation
 
 # Load .env
 load_dotenv()
+
+_CACHE_PATH = str(Path(__file__).resolve().parent.parent.parent / ".ragas_cache.db")
+set_llm_cache(SQLiteCache(database_path=_CACHE_PATH))
 
 
 def generate_agent_answers(qa_pairs: list) -> list:
@@ -69,17 +70,6 @@ def evaluate_agent(agent_results: list) -> dict:
     print("EVALUATING AGENT WITH RAGAS")
     print("="*70)
 
-    # Wrap Groq LLM with RAGAS wrapper — fixes the n>1 BadRequestError
-    groq_llm = ChatGroq(
-        model_name="llama-3.1-8b-instant",
-        groq_api_key=os.getenv("GROQ_API_KEY"),
-        temperature=0.0,
-        max_tokens=512
-    )
-    ragas_llm = LangchainLLMWrapper(groq_llm)  # RAGAS wrapper ensures n=1
-
-    # FIX: removed duplicate evaluate() call that was here before
-    # run_ragas_evaluation already handles LLM config, wrapping, and scoring
     scores = run_ragas_evaluation([
         {
             "question": r["question"],
@@ -102,7 +92,7 @@ def print_agent_scores(scores: dict):
 
     # Handle NaN values
     metrics = {}
-    for key in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
+    for key in ["faithfulness", "context_precision", "context_recall"]:
         valid_scores = [x for x in scores[key] if not math.isnan(x)]
         avg_score = sum(valid_scores) / len(valid_scores) if valid_scores else 0.0
         metrics[key.replace("_", " ").title()] = avg_score
@@ -174,7 +164,7 @@ def save_agent_results(agent_results: list, scores: dict, comparison: dict):
 
     # Save aggregated scores
     score_dict = {}
-    for key in ["faithfulness", "answer_relevancy", "context_precision", "context_recall"]:
+    for key in ["faithfulness", "context_precision", "context_recall"]:
         valid_scores = [x for x in scores[key] if not math.isnan(x)]
         score_dict[key] = sum(valid_scores) / len(valid_scores) if valid_scores else 0.0
 

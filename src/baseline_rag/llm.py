@@ -29,18 +29,17 @@ def get_llm():
 
 def get_agent_llm():
     """
-    Separate LLM for the agent — needs reliable tool calling support.
-    llama-3.3-70b-versatile handles structured tool calls correctly.
-    llama-3.1-8b-instant does NOT — it generates malformed function syntax.
+    Agent LLM — structured mode uses plain invoke, no tool binding needed.
+    8b has 131k TPM vs 70b's 6k TPM on Groq free tier.
     """
     groq_api_key = os.getenv("GROQ_API_KEY")
 
     llm = ChatGroq(
-        model_name="llama-3.3-70b-versatile",  # only model on Groq free tier with reliable tool use
+        model_name="llama-3.1-8b-instant",
         groq_api_key=groq_api_key,
         temperature=0.0,
         max_tokens=2048
     )
 
-    print("Agent LLM loaded: llama-3.3-70b-versatile via Groq")
+    print("Agent LLM loaded: llama-3.1-8b-instant via Groq")
     return llm

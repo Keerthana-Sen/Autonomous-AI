@@ -12,6 +12,16 @@ def query_agent(question: str) -> dict:
     return _post("agent", question)
 
 
+def inject_transaction(transaction: dict) -> dict:
+    """Injects a transaction into the API's live TRANSACTIONS dict."""
+    try:
+        r = requests.post(f"{API_BASE}/inject_transaction", json=transaction, timeout=10)
+        r.raise_for_status()
+        return r.json()
+    except Exception as e:
+        return {"error": str(e)}
+
+
 def check_health() -> bool:
     """Returns True if FastAPI server is reachable."""
     try:

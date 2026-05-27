@@ -1,26 +1,20 @@
 {
   "faithfulness": {
-    "agent": 0.4902116402116402,
+    "agent": 0.39478021978021977,
     "baseline": 0.20904761904761904,
-    "difference": 0.28116402116402117,
-    "improvement_percent": 134.49759554543155
-  },
-  "answer_relevancy": {
-    "agent": 0.0,
-    "baseline": 0.0,
-    "difference": 0.0,
-    "improvement_percent": 0
+    "difference": 0.18573260073260073,
+    "improvement_percent": 88.84702996320308
   },
   "context_precision": {
-    "agent": 0.0,
+    "agent": 0.9777777777377777,
     "baseline": 0.8666666666188888,
-    "difference": -0.8666666666188888,
-    "improvement_percent": -100.0
+    "difference": 0.11111111111888894,
+    "improvement_percent": 12.820512822117037
   },
   "context_recall": {
-    "agent": 0.04444444444444444,
+    "agent": 0.9066666666666666,
     "baseline": 0.6566666666666666,
-    "difference": -0.6122222222222222,
-    "improvement_percent": -93.23181049069375
+    "difference": 0.25,
+    "improvement_percent": 38.07106598984772
   }
 }

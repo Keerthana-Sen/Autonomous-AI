@@ -6,7 +6,7 @@ REQ004,Neha,800,training,low,Bob,available,FALSE,TRUE,active,3,incomplete_docume
 REQ005,David,700,training,medium,Sarah,available,TRUE,TRUE,active,3,budget_exceeded,approved
 REQ006,Ewin,15000,hardware,medium,Sarah,available,TRUE,FALSE,active,3,none,escalated
 REQ007,Jefin,2000,infrastructure,high,Bob,available,FALSE,FALSE,suspended,3,none,rejected
-REQ008,Kriss,11000,travel,high,John,unavailable,TRUE,FALSE,active,3,none,escalated
+REQ008,Kriss,11000,travel,high,John,unavailable,TRUE,FALSE,active,3,none,rejected
 REQ009,Janet,8000,training,high,Bob,available,TRUE,FALSE,active,3,none,rejected
 REQ010,Emma,4000,hardware,medium,Sarah,unavailable,TRUE,FALSE,active,5,none,escalated
 REQ011,Anna,9000,software_license,medium,John,available,FALSE,FALSE,active,3,none,rejected

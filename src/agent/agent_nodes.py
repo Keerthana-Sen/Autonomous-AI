@@ -1,6 +1,7 @@
 import json
 import sys
 import os
+import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
@@ -110,21 +111,32 @@ def reasoning_node(state: AgentState) -> Command:
         HumanMessage(content=(
             f"Context:\n{full_context}\n\n"
             f"Question: {question}\n\n"
-            f"Using ONLY the information explicitly stated in the context above, explain the decision. "
-            f"Cite the specific policy section and rule number for each reason. "
-            f"Do not introduce any amounts, conditions, or rules that do not appear verbatim in the context."
+            f"Using the transaction details and policy rules provided above, explain the decision. "
+            f"Combine the transaction values with the applicable policy conditions to reach your conclusion. "
+            f"Cite the specific policy section and rule number for each reason."
         ))
     ]
 
-    try:
-        response = llm.invoke(messages)  # plain invoke — no tools bound
-    except Exception as e:
-        if "rate_limit" in str(e).lower():
-            return Command(
-                goto="end_node",
-                update={"final_answer": "Rate limit reached.", "iterations": iterations}
-            )
-        raise
+    max_retries = 4
+    response = None
+    for attempt in range(max_retries):
+        try:
+            response = llm.invoke(messages)
+            break
+        except Exception as e:
+            err_str = str(e)
+            if "rate_limit" in err_str.lower() or "rate limit" in err_str.lower():
+                if attempt < max_retries - 1:
+                    m = re.search(r"try again in (\d+(?:\.\d+)?)s", err_str, re.IGNORECASE)
+                    wait = float(m.group(1)) + 2 if m else 60
+                    print(f"  ⚠ Rate limited — waiting {wait:.0f}s (attempt {attempt+1}/{max_retries})")
+                    time.sleep(wait)
+                    continue
+                return Command(
+                    goto="end_node",
+                    update={"final_answer": "Rate limit reached after retries.", "iterations": iterations}
+                )
+            raise
 
     clean = extract_clean_answer(
         response.content if hasattr(response, "content") else str(response)
