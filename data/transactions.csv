@@ -19,3 +19,7 @@ REQ017,Nina,6500,infrastructure,medium,John,unavailable,TRUE,FALSE,active,3,none
 REQ018,Oscar,450,software_license,low,Bob,available,TRUE,FALSE,under_review,3,none,approved
 REQ019,Paula,2000,travel,high,Sarah,available,TRUE,FALSE,active,3,none,approved
 REQ020,Quinn,4800,infrastructure,critical,John,unavailable,TRUE,FALSE,active,5,none,escalated
+REQ021,Ryan,9500,travel,high,Sarah,available,TRUE,FALSE,active,5,none,rejected
+REQ022,Sophie,1500,training,medium,Bob,available,FALSE,TRUE,active,3,suspended_account,rejected
+REQ023,Liam,6000,infrastructure,critical,Sarah,unavailable,FALSE,FALSE,active,3,none,escalated
+REQ024,Meena,10000,software_license,low,Bob,available,TRUE,FALSE,active,3,none,approved

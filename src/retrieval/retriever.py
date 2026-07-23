@@ -1,33 +1,32 @@
 import sys
 import os
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from dotenv import load_dotenv
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-dotenv_path = Path(__file__).resolve().parent.parent.parent / ".env"
-load_dotenv(dotenv_path=dotenv_path)
-
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 
-CHROMA_DB = "data/chroma_db"
+CHROMA_PATH = str(Path(__file__).resolve().parent.parent.parent / "data" / "chroma_db")
 
 _vector_store = None
+
+
+def _get_embedding_model():
+    return HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        cache_folder=os.path.expanduser("~/.cache/huggingface/hub")
+    )
+
 
 def load_vector_store():
     global _vector_store
     if _vector_store is None:
-        embedding_model = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            cache_folder=os.path.expanduser("~/.cache/huggingface/hub")
-        )
         _vector_store = Chroma(
-            persist_directory=CHROMA_DB,
-            embedding_function=embedding_model
+            persist_directory=CHROMA_PATH,
+            embedding_function=_get_embedding_model()
         )
-        print(f"Loaded existing ChromaDB from {CHROMA_DB}")
+        print(f"Loaded ChromaDB from {CHROMA_PATH}")
     return _vector_store
 
 
@@ -42,87 +41,55 @@ def get_retriever(k: int = 3):
     return retriever
 
 
-def get_smart_retriever(question: str, k: int = 3):
+def get_retrieval_confidence(query: str, k: int = 3) -> float:
     """
-    Picks the right policy file based on keywords in the question.
-    Fixes the wrong-chunk retrieval problem — approval questions
-    were pulling rejection/escalation chunks instead of approval chunks.
+    Returns a 0-100 confidence score based on average similarity of top-k retrieved chunks.
     """
-    vector_store = load_vector_store()
-
-    question_lower = question.lower()
-
-    # Map keywords to the correct policy source file
-    if any(w in question_lower for w in ["approved", "approval", "auto-approved", "auto approved"]):
-        source_filter = "data/raw/policies/policy_approval_limits.txt"
-    elif any(w in question_lower for w in ["escalated", "escalation", "unavailable"]):
-        source_filter = "data/raw/policies/policy_escalation_rules.txt"
-    elif any(w in question_lower for w in ["rejected", "rejection", "suspended", "duplicate", "incomplete"]):
-        source_filter = "data/raw/policies/policy_rejection_rules.txt"
-    else:
-        # No clear match — fall back to standard similarity search
-        print("No keyword match — using standard retriever")
-        return get_retriever(k=k)
-
-    print(f"Smart retriever — filtering by: {source_filter}")
-
-    # Filter ChromaDB by source metadata
-    retriever = vector_store.as_retriever(
-        search_type="similarity",
-        search_kwargs={
-            "k": k,
-            "filter": {"source": source_filter}
-        }
-    )
-    return retriever
+    try:
+        vector_store = load_vector_store()
+        results = vector_store.similarity_search_with_score(query, k=k)
+        if not results:
+            return 0.0
+        scores = []
+        for _, s in results:
+            try:
+                scores.append(float(s))
+            except (TypeError, ValueError):
+                pass
+        if not scores:
+            return round(len(results) / k * 65, 1)
+        avg = sum(scores) / len(scores)
+        if avg > 1.0:
+            # L2 distance — invert to confidence
+            confidence = max(1.0 - avg / 1.5, 0.0) * 100
+        elif avg >= 0.0:
+            # Cosine similarity [0, 1]
+            confidence = avg * 100
+        else:
+            confidence = max((avg + 1) / 2 * 100, 10.0)
+        return round(min(confidence, 100.0), 1)
+    except Exception:
+        return 0.0
 
 
-def retrieve_chunks(query: str, k: int = 3):
-    """Retrieves top k chunks using smart routing."""
-    retriever = get_smart_retriever(query, k=k)
-    return retriever.invoke(query)
-
-
-def retrieve_multi_policy_context(query: str, k_per_policy: int = 2) -> str:
+def retrieve_multi_policy_context(query: str, k_per_policy: int = 3) -> str:
     """
-    Queries all three policy files separately and combines the results.
-    A single similarity search can only pull chunks from one dominant policy file,
-    missing the other policies needed for multi-rule decisions. This ensures
-    coverage across rejection, escalation, and approval rules simultaneously.
+    Retrieves policy context across all policy files.
+    Fetches k_per_policy * 3 chunks so all three policy types are represented.
+    Returns a single formatted string for the agent to consume.
     """
-    vector_store = load_vector_store()
-
-    policy_sources = [
-        ("data/raw/policies/policy_rejection_rules.txt",  "Rejection Rules"),
-        ("data/raw/policies/policy_escalation_rules.txt", "Escalation Rules"),
-        ("data/raw/policies/policy_approval_limits.txt",  "Approval Limits"),
-    ]
-
-    def _fetch(source_filter, label):
-        retriever = vector_store.as_retriever(
-            search_type="similarity",
-            search_kwargs={"k": k_per_policy, "filter": {"source": source_filter}}
-        )
-        docs = retriever.invoke(query)
-        return label, [doc.page_content for doc in docs]
-
-    results = {}
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = {executor.submit(_fetch, src, lbl): lbl for src, lbl in policy_sources}
-        for future in as_completed(futures):
-            label, chunks = future.result()
-            results[label] = chunks
-
-    seen = set()
-    sections = []
-    for _, label in policy_sources:  # preserve order
-        chunks = [c for c in results.get(label, []) if c not in seen]
-        for c in chunks:
-            seen.add(c)
-        if chunks:
-            sections.append(f"[{label}]\n" + "\n\n".join(chunks))
-
-    return "\n\n---\n\n".join(sections) if sections else "No relevant policy context found."
+    try:
+        vector_store = load_vector_store()
+        results = vector_store.similarity_search(query, k=k_per_policy * 3)
+        if not results:
+            return "No relevant policy context found."
+        parts = []
+        for doc in results:
+            source = doc.metadata.get("source", "policy")
+            parts.append(f"[{source}]\n{doc.page_content}")
+        return "\n\n".join(parts)
+    except Exception as e:
+        return f"Error retrieving policy context: {e}"
 
 
 if __name__ == "__main__":
@@ -131,10 +98,9 @@ if __name__ == "__main__":
         "Why was REQ004 rejected?",
         "Why was REQ007 escalated?"
     ]
-
     for query in test_queries:
         print(f"\nQuery: {query}")
         print("-" * 50)
-        chunks = retrieve_chunks(query, k=2)
-        for i, chunk in enumerate(chunks):
-            print(f"Chunk {i+1}: {chunk.page_content[:100]}...")
+        docs = get_retriever(k=3).invoke(query)
+        for doc in docs:
+            print(doc.page_content[:300])

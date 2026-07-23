@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"
 
 from langgraph.graph import StateGraph, START, END
 from src.agent.agent_state import AgentState
-from src.agent.agent_nodes import reasoning_node, tool_execution_node, end_node
+from src.agent.agent_nodes import reasoning_node, end_node
 
 
 def create_agent_graph():
@@ -15,7 +15,6 @@ def create_agent_graph():
 
     # Register nodes
     graph.add_node("reasoning_node", reasoning_node)
-    graph.add_node("tool_execution", tool_execution_node)
     graph.add_node("end_node", end_node)
 
     # Define edges

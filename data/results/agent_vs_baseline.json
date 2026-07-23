@@ -1,9 +1,9 @@
 {
   "faithfulness": {
-    "agent": 0.39478021978021977,
+    "agent": 0.5029761904761905,
     "baseline": 0.20904761904761904,
-    "difference": 0.18573260073260073,
-    "improvement_percent": 88.84702996320308
+    "difference": 0.29392857142857143,
+    "improvement_percent": 140.60364464692483
   },
   "context_precision": {
     "agent": 0.9777777777377777,

@@ -12,6 +12,7 @@ class AnswerResponse(BaseModel):
     answer: str
     mode: str        # "rag" or "agent"
     contexts: list[str] = []   # retrieved chunks (empty for agent)
+    confidence: float = 0.0    # retrieval similarity score 0–100
 
 
 class InjectTransactionRequest(BaseModel):
@@ -26,5 +27,4 @@ class InjectTransactionRequest(BaseModel):
     duplicate: str
     account_status: str
     employee_level: str
-    previous_rejection_reason: str
     decision: str

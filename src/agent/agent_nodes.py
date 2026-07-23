@@ -8,20 +8,71 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"
 from langgraph.types import Command
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from src.baseline_rag.llm import get_llm
 from src.baseline_rag.llm import get_agent_llm
+from src.retrieval.retriever import get_retrieval_confidence
 from src.agent.agent_state import AgentState
 from src.agent.agent_prompts import SYSTEM_PROMPT
 from src.agent.agent_utils import extract_clean_answer
-from src.agent.tools import check_transaction, retrieve_policy_context, lookup_policy
+from src.agent.tools import check_transaction, retrieve_policy_context
 
 import re
 
 
 def _extract_request_id(question: str) -> str | None:
-    """Pulls REQ001-style IDs from the question string."""
-    match = re.search(r"REQ\d+", question, re.IGNORECASE)
-    return match.group(0).upper() if match else None
+    """Pulls REQ/REQCUSTOM IDs from the question. Normalizes standard IDs to 3-digit zero-padded form."""
+    match = re.search(r"\b(REQCUSTOM\d+)\b", question, re.IGNORECASE)
+    if match:
+        return match.group(1).upper()
+    match = re.search(r"\bREQ(\d+)\b", question, re.IGNORECASE)
+    if not match:
+        return None
+    return f"REQ{int(match.group(1)):03d}"
+
+
+def _compute_approval_tier(tx: dict) -> str:
+    """Returns the correct approval tier using Python arithmetic — prevents LLM numerical errors."""
+    try:
+        amount = float(str(tx.get("amount", "0")).replace(",", "").replace("$", "").strip())
+    except (ValueError, TypeError):
+        return "tier unknown"
+    req_type = tx.get("request_type", "").lower().replace(" ", "_")
+    priority = tx.get("priority", "").lower()
+    docs_complete = str(tx.get("documentation_complete", "TRUE")).upper() == "TRUE"
+    account_status = tx.get("account_status", "active").lower()
+    is_duplicate = str(tx.get("duplicate", "FALSE")).upper() == "TRUE"
+
+    # Budget caps — always reject, checked first
+    if req_type == "training" and amount > 5000:
+        return f"BUDGET CAP EXCEEDED — ${amount:.0f} exceeds training max of $5000 (Approval Policy S3 R9) — reject"
+    if req_type == "travel" and amount > 8000:
+        return f"BUDGET CAP EXCEEDED — ${amount:.0f} exceeds travel max of $8000 (Approval Policy S3 R10) — reject"
+
+    # Critical-priority infrastructure exception: overrides rejection → escalate with waiver
+    if req_type == "infrastructure" and priority == "critical":
+        if not docs_complete or account_status == "suspended" or is_duplicate:
+            return (
+                f"escalation via critical-priority infrastructure exception (Rejection Policy S3 R8) — "
+                f"rejection conditions are present but overridden; request is escalated with waiver instead of rejected"
+            )
+
+    # Rejection conditions
+    if account_status == "suspended":
+        return f"rejected — suspended account status"
+    if not docs_complete:
+        return f"rejected — incomplete documentation"
+    if is_duplicate:
+        return f"rejected — duplicate request"
+
+    # Approval tiers by amount
+    if req_type in ("software_license", "training") and amount < 1000:
+        return f"auto-approve eligible — ${amount:.0f} is under $1000 (Approval Policy S1 R1)"
+    if req_type not in ("software_license", "training") and amount < 500:
+        return f"auto-approve eligible — ${amount:.0f} is under $500 (Approval Policy S1 R2)"
+    if amount < 5000:
+        return f"manager approval — ${amount:.0f} is in the $1000–$4999 range (Approval Policy S1 R3)"
+    if amount <= 10000:
+        return f"senior manager + finance approval — ${amount:.0f} is in the $5000–$10000 range (Approval Policy S1 R4)"
+    return f"director escalation — ${amount:.0f} exceeds $10000 (Approval Policy S1 R5)"
 
 
 def reasoning_node(state: AgentState) -> Command:
@@ -57,7 +108,11 @@ def reasoning_node(state: AgentState) -> Command:
         tx_result = check_transaction(req_id)
         if tx_result["status"] == "found":
             details = {k: v for k, v in tx_result["details"].items() if k.lower() != "decision"}
-            transaction_context = f"Transaction details:\n{json.dumps(details, indent=2)}"
+            tier = _compute_approval_tier(tx_result["details"])
+            transaction_context = (
+                f"Transaction details:\n{json.dumps(details, indent=2)}\n\n"
+                f"Computed approval tier (Python-verified): {tier}"
+            )
             actual_decision = tx_result["details"].get("decision", "").lower()
             # Only fire mismatch if exactly one decision keyword appears in the
             # question — multiple keywords means a comparison/reasoning question
@@ -95,7 +150,8 @@ def reasoning_node(state: AgentState) -> Command:
         if extras:
             retrieval_query = f"{question}\nTransaction attributes: {', '.join(extras)}"
     policy_context = retrieve_policy_context(retrieval_query)
-    print(f"  ✓ Policy context retrieved ({len(policy_context)} chars)")
+    confidence = get_retrieval_confidence(retrieval_query)
+    print(f"  ✓ Policy context retrieved ({len(policy_context)} chars), confidence={confidence}")
 
     # ── Step 3: Build prompt and generate answer ─────────────────────────────
     print(f"  [Step 3] Generating answer...")
@@ -111,9 +167,10 @@ def reasoning_node(state: AgentState) -> Command:
         HumanMessage(content=(
             f"Context:\n{full_context}\n\n"
             f"Question: {question}\n\n"
-            f"Using the transaction details and policy rules provided above, explain the decision. "
-            f"Combine the transaction values with the applicable policy conditions to reach your conclusion. "
-            f"Cite the specific policy section and rule number for each reason."
+            f"Write a direct explanation in 3 to 5 sentences. "
+            f"Start immediately with the decision outcome — do NOT say 'I will', 'Based on the process', or narrate your steps. "
+            f"Cite each applicable policy section and rule number. "
+            f"Reference the exact transaction values that triggered each rule."
         ))
     ]
 
@@ -138,23 +195,24 @@ def reasoning_node(state: AgentState) -> Command:
                 )
             raise
 
-    clean = extract_clean_answer(
-        response.content if hasattr(response, "content") else str(response)
-    )
+    raw_content = ""
+    if hasattr(response, "content") and response.content:
+        raw_content = response.content
+    elif hasattr(response, "additional_kwargs"):
+        raw_content = response.additional_kwargs.get("reasoning_content", "")
+    if not raw_content:
+        raw_content = str(response)
+    clean = extract_clean_answer(raw_content)
     print(f"  ✓ Answer ready")
 
     return Command(
         goto="end_node",
         update={
             "final_answer": clean,
-            "iterations": iterations
+            "iterations": iterations,
+            "retrieval_confidence": confidence
         }
     )
-
-
-def tool_execution_node(state: AgentState) -> Command:
-    """Not used in structured mode — kept for graph compatibility."""
-    return Command(goto="reasoning_node", update={})
 
 
 def end_node(state: AgentState) -> dict:

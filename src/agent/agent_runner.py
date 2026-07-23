@@ -23,21 +23,22 @@ def run_agent(question: str) -> dict:
     # Initialize state
     initial_state = {
         "question": question,
-        "messages": [],
-        "tool_calls": [],
-        "final_answer": ""
+        "final_answer": "",
+        "retrieval_confidence": 0.0
     }
 
     # Run the agent
     result = agent_graph.invoke(initial_state)
 
     answer = result.get("final_answer", "")
+    confidence = result.get("retrieval_confidence", 0.0)
     print(f"\n[FINAL ANSWER]\n{answer}")
     print('='*70)
 
     return {
         "question": question,
-        "answer": answer
+        "answer": answer,
+        "retrieval_confidence": confidence
     }
 
 

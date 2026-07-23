@@ -58,5 +58,21 @@
     {
         "question": "Why was REQ020 escalated with fast-track processing, and which policies contributed to this outcome?",
         "answer": "REQ020 was escalated with fast-track processing due to three overlapping policy conditions: first, Quinn is a Level 5 employee, triggering fast-track escalation directly to the senior manager with a 12-hour review window; second, it is a critical-priority infrastructure request, qualifying for the emergency fast-track rule under the escalation policy; third, the approver John is unavailable, independently triggering escalation. Additionally, as an infrastructure request above 2000 USD, finance sign-off is required under the approval policy. The combination results in a fast-tracked, dual escalation to both the senior manager and the finance team."
+    },
+    {
+        "question": "Why was REQ021 rejected despite the requester being a Level 5 employee who would normally receive fast-track processing?",
+        "answer": "REQ021 was rejected because the amount of 9500 USD exceeds the 8000 USD per-request budget cap for travel requests defined in Approval Policy Section 3, Rule 10. The Rejection Policy Section 2, Rule 7 states that budget-cap violations are never converted to escalations regardless of priority, request type, or approver availability. Although Ryan is a Level 5 employee, which would normally trigger fast-track escalation directly to the senior manager under Escalation Policy Section 3, Rule 7, the travel budget cap violation takes absolute precedence and mandates immediate rejection. The requester must resubmit with a revised amount at or below the 8000 USD cap."
+    },
+    {
+        "question": "Why was REQ022 rejected even though the previously suspended account is now active and the original rejection reason has been remediated?",
+        "answer": "REQ022 was rejected because the duplicate exception under Rejection Policy Section 1, Rule 3(b) requires not only that the original rejection reason has been fully remediated, but also that the new submission is otherwise fully compliant. While Sophie's account has been reactivated, resolving the suspended account issue, the new submission still has incomplete documentation. Rejection Policy Section 1, Rule 1 states that incomplete documentation is independently grounds for rejection. Since the full-compliance condition is not satisfied, the 30-day duplicate rejection rule applies and the request is rejected."
+    },
+    {
+        "question": "Why was REQ023 escalated with a documentation waiver rather than approved with manager-only fast-track, given that it is a critical-priority infrastructure request?",
+        "answer": "REQ023 was escalated with a documentation waiver because the critical-priority infrastructure exception (Rejection Policy Section 3, Rule 8) overrides standard rejection for incomplete documentation, requiring escalation with a waiver and complete documentation within 48 hours. The Approval Policy Section 4, Rule 11 manager-only fast-track does not apply because that rule is limited to critical-priority infrastructure requests up to 5000 USD, and the amount of 6000 USD exceeds this threshold. Instead, Escalation Policy Section 2, Rule 5 applies: infrastructure requests above 5000 USD with critical priority are escalated simultaneously to both the senior manager and the finance team. The approver's unavailability under Escalation Policy Section 1, Rule 1 independently triggers escalation as well."
+    },
+    {
+        "question": "Why was REQ024 approved under senior manager and finance review rather than auto-approved or escalated to the director?",
+        "answer": "REQ024 requires both senior manager and finance team approval under Approval Limits Section 1, Rule 4, which covers requests between 5000 USD and 10000 USD. The amount of 10000 USD does not satisfy Rule 5, which applies only to amounts strictly above 10000 USD, so director escalation does not trigger. Software license requests have no budget cap, so there is no rejection condition. With complete documentation, an active account, and no duplicate flag, all standard conditions are met and the request proceeds through the senior manager and finance approval path."
     }
 ]

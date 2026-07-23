@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from src.api.models import QuestionRequest, AnswerResponse, InjectTransactionRequest
 import src.agent.tools as _tools_module
 from src.baseline_rag.rag_chain import build_rag_chain
-from src.retrieval.retriever import get_retriever
+from src.retrieval.retriever import get_retriever, get_retrieval_confidence
 from src.agent.agent_runner import run_agent
 
 router = APIRouter()
@@ -37,7 +37,8 @@ def rag_endpoint(request: QuestionRequest):
             question=request.question,
             answer=answer,
             mode="rag",
-            contexts=contexts
+            contexts=contexts,
+            confidence=get_retrieval_confidence(request.question)
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -55,7 +56,8 @@ def agent_endpoint(request: QuestionRequest):
         return AnswerResponse(
             question=request.question,
             answer=result["answer"],
-            mode="agent"
+            mode="agent",
+            confidence=result.get("retrieval_confidence", 0.0)
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
